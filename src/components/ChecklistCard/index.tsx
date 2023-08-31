@@ -1,28 +1,28 @@
-import { TouchableOpacityProps } from 'react-native'
-import { Caption, Container, Section, Title, Icon } from "./styles";
+import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { Container, Icon, SectionData } from "./styles";
+import { ListData } from '@components/ListData';
 
-type Props = TouchableOpacityProps;
+type Props = {
+    name: string;
+    farm: string;
+    city: string;
+    created_date: string;
+    onPress: () => void;
+}
 
-export function ChecklistCard({ ...rest }: Props) {
+export function ChecklistCard({ name, farm, city, created_date, onPress }: Props) {
     return (
-        <Container {...rest}>
-            <Section>
-                <Caption>Nome:</Caption>
-                <Title>João</Title>
-            </Section>
-            <Section>
-                <Caption>Fazenda:</Caption>
-                <Title>Marianos</Title>
-            </Section>
-            <Section>
-                <Caption>Cidade:</Caption>
-                <Title>São Paulo</Title>
-            </Section>
-            <Section>
-                <Caption>Data de criação:</Caption>
-                <Title>12/12/2020</Title>
-            </Section>
-            <Icon />
+        <Container>
+            <SectionData>
+                <ListData caption='Nome' title={name} />
+                <ListData caption='Fazenda' title={farm} />
+                <ListData caption='Cidade' title={city} />
+                <ListData caption='Data de Criação' title={created_date} />
+            </SectionData>
+            <TouchableOpacity onPress={onPress}>
+                <Icon />
+            </TouchableOpacity>
+
         </Container>
     );
 }

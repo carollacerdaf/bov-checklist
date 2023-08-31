@@ -6,13 +6,15 @@ import theme from './src/theme'
 
 import { Loading } from '@components/Loading';
 import { Home } from '@screens/Home';
+import { Details } from '@screens/Details';
+import { Register } from '@screens/Register';
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
   return (
     <ThemeProvider theme={theme}>
-      {fontsLoaded ? <Home /> : <Loading />}
+      {fontsLoaded ? <Register /> : <Loading />}
     </ThemeProvider>
   );
 }
