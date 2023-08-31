@@ -12,7 +12,16 @@
       ],
       "@service/*": [
         "./src/service/*"
-      ]
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@contexts/*": [
+        "./src/contexts/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
     }
   }
 }

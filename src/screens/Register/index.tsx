@@ -2,6 +2,7 @@ import { Alert, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import Toast from 'react-native-toast-message';
 import * as yup from 'yup';
 
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes'
@@ -10,9 +11,11 @@ import { Header } from "@components/Header"
 import { Input } from "@components/Input"
 import { Button } from "@components/Button"
 
+import { AppError } from '@utils/AppError';
+
 import { Container, Form } from "./styles"
 import { api } from '@service/api';
-import axios from 'axios';
+import { useApp } from '@hooks/useApp';
 
 type FormDataProps = {
     name: string;
@@ -61,7 +64,7 @@ export function Register() {
                 "checklists": [
                   {
                     "_id": "1",
-                    "type": "BPA",
+                    "type": "",
                     "amount_of_milk_produced": 300,
                     "number_of_cows_head": 17,
                     "had_supervision": true,
@@ -84,11 +87,11 @@ export function Register() {
                   }
                 ]
               });
-              console.log(response.data);
         }catch (error) {
-            if(axios.isAxiosError(error)){
-                Alert.alert(error.message);
-            }
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível realizar o cadastro. Tente mais tarde.'
+            Alert.alert('Ocorreu um erro', title);
+            
         }
         
     }

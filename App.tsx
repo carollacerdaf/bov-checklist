@@ -5,13 +5,16 @@ import theme from './src/theme'
 import { Routes } from './src/routes';
 
 import { Loading } from '@components/Loading';
+import { AppContextProvider } from '@contexts/AppContext';
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
   return (
     <ThemeProvider theme={theme}>
-      {fontsLoaded ? <Routes/> : <Loading />}
-    </ThemeProvider>
+      <AppContextProvider>
+        {fontsLoaded ? <Routes /> : <Loading />}
+      </AppContextProvider>
+    </ThemeProvider >
   );
 }
