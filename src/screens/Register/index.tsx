@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native'
+import { Alert, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -11,6 +11,8 @@ import { Input } from "@components/Input"
 import { Button } from "@components/Button"
 
 import { Container, Form } from "./styles"
+import { api } from '@service/api';
+import axios from 'axios';
 
 type FormDataProps = {
     name: string;
@@ -53,8 +55,42 @@ export function Register() {
         navigation.navigate('home');
     }
 
-    function handleForm(data: FormDataProps) {
-        console.log(data);
+    async function handleForm(data: FormDataProps) {
+        try{
+            const response = await api.post('/v1/checkList', {
+                "checklists": [
+                  {
+                    "_id": "1",
+                    "type": "BPA",
+                    "amount_of_milk_produced": 300,
+                    "number_of_cows_head": 17,
+                    "had_supervision": true,
+                    "farmer": {
+                      "name": "Fazenda São Rock",
+                      "city": "São Rock"
+                    },
+                    "from": {
+                      "name": "Luciano Camargo"
+                    },
+                    "to": {
+                      "name": "Fernando Siqueira"
+                    },
+                    "location": {
+                      "latitude": -23.5,
+                      "longitude": -46.6
+                    },
+                    "created_at": "2022-02-01T10:10:21.748Z",
+                    "updated_at": "2022-02-01T10:10:21.748Z"
+                  }
+                ]
+              });
+              console.log(response.data);
+        }catch (error) {
+            if(axios.isAxiosError(error)){
+                Alert.alert(error.message);
+            }
+        }
+        
     }
 
     return (

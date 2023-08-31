@@ -32,8 +32,8 @@ export function Details() {
     }
 
     const initialRegion = {
-        latitude: -25.8,
-        longitude: -25.8,
+        latitude: -23.5,
+        longitude: -46.6,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     };
