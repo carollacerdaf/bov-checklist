@@ -12,16 +12,15 @@ type Props = {
 
 export function ChecklistCard({ name, farm, city, created_date, onPress }: Props) {
     return (
-        <Container>
+        <Container onPress={onPress}>
             <SectionData>
                 <ListData caption='Nome' title={name} />
                 <ListData caption='Fazenda' title={farm} />
                 <ListData caption='Cidade' title={city} />
                 <ListData caption='Data de Criação' title={created_date} />
             </SectionData>
-            <TouchableOpacity onPress={onPress}>
-                <Icon />
-            </TouchableOpacity>
+            <Icon />
+
 
         </Container>
     );
