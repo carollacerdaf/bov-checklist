@@ -1,6 +1,7 @@
-import styled from 'styled-components/native'
+import MapView from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NotePencil } from 'phosphor-react-native';
+import styled from 'styled-components/native'
 
 export const Container = styled(SafeAreaView)`
     flex: 1;
@@ -8,7 +9,7 @@ export const Container = styled(SafeAreaView)`
 `;
 
 export const ContainerData = styled.View`
-    margin: 20px;
+    margin: 10px 20px;
     background-color: ${({ theme }) => theme.COLORS.GRAY_100};
     flex-direction: row;
 `;
@@ -23,3 +24,11 @@ export const Icon = styled(NotePencil).attrs(({ theme }) => ({
 }))`
 margin-top: 14px ;
 `
+export const MapContainer = styled.View`
+padding: 20px;
+`;
+
+export const StyledMapView = styled(MapView)`
+width: 100%;
+height: 100%;
+`;

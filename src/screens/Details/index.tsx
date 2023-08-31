@@ -1,9 +1,10 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { ListData } from "@components/ListData";
 import { Header } from "@components/Header";
 
-import { Container, ContainerData, Icon, Section } from "./styles";
+import { Container, ContainerData, Icon, MapContainer, Section, StyledMapView } from "./styles";
 
 type Props = {
     name: string;
@@ -14,30 +15,45 @@ type Props = {
     milk_produced: string;
     cows_head: string;
     had_supervision: string;
+    latitude: number;
+    longitude: number;
     onPress: () => void;
 }
 
-export function Details({ name, farm, city, created_date, type,
-    milk_produced, cows_head, had_supervision, onPress }: Props) {
+export function Details() {
+
+        const initialRegion = {
+            latitude: -25.8,
+            longitude: -25.8,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          };
+
     return (
         <Container>
             <Header />
             <ContainerData>
                 <Section>
-                    <ListData caption="Nome" title={name} />
-                    <ListData caption="Fazenda" title={farm} />
-                    <ListData caption="Cidade" title={city} />
-                    <ListData caption="Data de criação" title={created_date} />
-                    <ListData caption="Tipo" title={type} />
-                    <ListData caption="Quantidade de produtos de leite" title={milk_produced} />
-                    <ListData caption="Cabeça de gado" title={cows_head} />
-                    <ListData caption="Supervisão" title={had_supervision} />
+                    <ListData caption="Nome" title='' />
+                    <ListData caption="Fazenda" title='' />
+                    <ListData caption="Cidade" title='' />
+                    <ListData caption="Data de criação" title='' />
+                    <ListData caption="Tipo" title='' />
+                    <ListData caption="Quantidade de produtos de leite" title='' />
+                    <ListData caption="Cabeça de gado" title='' />
+                    <ListData caption="Supervisão" title='' />
                 </Section>
-                <TouchableOpacity onPress={onPress}>
+                <TouchableOpacity>
                     <Icon />
                 </TouchableOpacity>
             </ContainerData>
-
+            <MapContainer>
+            <ListData caption="Localização" />
+            <StyledMapView
+                        provider={PROVIDER_GOOGLE}
+                        initialRegion={initialRegion}
+                    />
+                    </MapContainer>
         </Container>
     );
 }
