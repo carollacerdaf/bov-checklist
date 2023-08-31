@@ -1,6 +1,8 @@
-import { ScrollView, Text } from 'react-native'
+import { ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup';
 
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes'
 
@@ -20,6 +22,16 @@ type FormDataProps = {
     cowsHead: string;
 }
 
+const registerSchema = yup.object({
+    name: yup.string().required('Informe o nome'),
+    farm: yup.string().required('Informe o nome da fazenda'),
+    city: yup.string().required('Informe a cidade'),
+    supervisor: yup.string().required('Informe o nome do(a) supervisor(a)'),
+    type: yup.string().required('Informe o tipo'),
+    milkAmount: yup.string().required('Informe a quantidade'),
+    cowsHead: yup.string().required('Informe a quantidade'),
+});
+
 export function Register() {
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
@@ -30,8 +42,9 @@ export function Register() {
             farm: 'WashingtonFarm',
             milkAmount: '100',
             supervisor: 'Carlos',
-            type: 'BAB'
-        }
+            type: 'Dropdown AQUI'
+        },
+        resolver: yupResolver(registerSchema)
     });
 
     const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -54,20 +67,24 @@ export function Register() {
                     <Controller
                         control={control}
                         name='name'
-                        rules={{
-                            required: 'Informe o nome.'
-                        }}
                         render={({ field: { onChange, value } }) => (
-                            <Input title="Nome" onChangeText={onChange} value={value} />
+                            <Input
+                                title="Nome"
+                                onChangeText={onChange}
+                                value={value}
+                            />
                         )}
                     />
-                    <Text>{errors.name?.message}</Text>
 
                     <Controller
                         control={control}
                         name='farm'
                         render={({ field: { onChange, value } }) => (
-                            <Input title="Fazenda" onChangeText={onChange} value={value} />
+                            <Input
+                                title="Fazenda"
+                                onChangeText={onChange}
+                                value={value}
+                            />
                         )}
                     />
 
@@ -75,7 +92,10 @@ export function Register() {
                         control={control}
                         name='city'
                         render={({ field: { onChange, value } }) => (
-                            <Input title="Cidade" onChangeText={onChange} value={value} />
+                            <Input
+                                title="Cidade"
+                                onChangeText={onChange}
+                                value={value} />
                         )}
                     />
 
@@ -83,7 +103,10 @@ export function Register() {
                         control={control}
                         name='supervisor'
                         render={({ field: { onChange, value } }) => (
-                            <Input title="Supervisor" onChangeText={onChange} value={value} />
+                            <Input
+                                title="Supervisor"
+                                onChangeText={onChange}
+                                value={value} />
                         )}
                     />
 
@@ -91,7 +114,10 @@ export function Register() {
                         control={control}
                         name='type'
                         render={({ field: { onChange, value } }) => (
-                            <Input title="Tipo" onChangeText={onChange} value={value} />
+                            <Input
+                                title="Tipo"
+                                onChangeText={onChange}
+                                value={value} />
                         )}
                     />
 
@@ -99,7 +125,10 @@ export function Register() {
                         control={control}
                         name='milkAmount'
                         render={({ field: { onChange, value } }) => (
-                            <Input title="Quantidade de Leite / mês" onChangeText={onChange} value={value} />
+                            <Input
+                                title="Quantidade de Leite / mês"
+                                onChangeText={onChange}
+                                value={value} />
                         )}
                     />
 
