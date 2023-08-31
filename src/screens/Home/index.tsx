@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { Header } from '@components/Header'
 import { ChecklistCard } from '@components/ChecklistCard';
+import { Button } from '@components/Button';
 
 import { Container } from './styles'
+import { AppNavigatorRoutesProps } from 'src/routes/app.routes';
 
 export function Home() {
 
@@ -62,23 +65,35 @@ export function Home() {
             "__v": 0
         }
     ]);
+
+    const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+    function handleDetailScreen() {
+        navigation.navigate('details');
+    }
+
+    function handleRegisterScreen() {
+        navigation.navigate('register');
+    }
     return (
         <Container>
-            <Header />
+            <Header title='BOVChecklist'/>
             <FlatList
                 data={farmsData}
                 renderItem={({ item }) => (
                     <ChecklistCard name={item.from.name}
                         city={item.farmer.city}
                         farm={item.farmer.name}
-                        created_date={formatDate(item.created_at)} 
-                        onPress={() => {console.log('ok')}}
-                        />
+                        created_date={formatDate(item.created_at)}
+                        onPress={handleDetailScreen}
+                    />
                 )}
                 keyExtractor={item => item.created_at}
                 showsVerticalScrollIndicator={false}
-                style={{padding: 20}}
+                style={{ padding: 20 }}
             />
+            <Button title="Cadastrar" onPress={handleRegisterScreen} />
+
         </Container>
     )
 }

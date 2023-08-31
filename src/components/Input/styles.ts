@@ -12,17 +12,16 @@ export const Title = styled.Text`
 font-family: ${theme.FONT_FAMILY.BOLD};
 font-size: ${theme.FONT_SIZE.SM}px;
 color: ${theme.COLORS.GRAY_200};
-margin-bottom: 4px;
+margin-bottom: 2px;
 `};
 `;
 
 export const InputText = styled(TextInput)`
 flex:1;
-min-height: 56px;
-max-height: 56px;
+min-height: 45px;
+max-height: 50px;
 border-radius: 6px;
-padding: 16px;
-margin-bottom: 4px;
+padding-left: 16px;
 
 ${({ theme }) => css`
 font-family: ${theme.FONT_FAMILY.REGULAR};
