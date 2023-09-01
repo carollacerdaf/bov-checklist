@@ -9,9 +9,7 @@ import { AppRoutes } from './app.routes';
 
 export function Routes() {
     const { COLORS } = useTheme();
-    const { item } = useApp();
-
-    console.log('ITEM',item);
+    
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
             <NavigationContainer>

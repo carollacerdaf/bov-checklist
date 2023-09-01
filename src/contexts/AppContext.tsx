@@ -3,7 +3,7 @@ import { Alert } from "react-native";
 
 import uuid from 'react-native-uuid';
 
-import { ItemDTO } from "@dtos/ChecklistDTO";
+import { ItemDTO } from "@dtos/ItemDTO";
 import { api } from '@service/api';
 
 export type AppContextDataProps = {
@@ -51,7 +51,6 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
           }
         ]
       });
-      console.log('DONE');
       if (response.data) {
         setItem(data)
       }
@@ -64,7 +63,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     api.get('/v1/checkList').then((response) => {
       return response;
     }).catch((err) => {
-      console.log(err);
+      throw err;
     })
   }
   return (

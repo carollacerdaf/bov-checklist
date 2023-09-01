@@ -23,8 +23,6 @@ export function Details() {
     const route = useRoute();
     const { checklistItemId } = route.params as RouteParams;
 
-    console.log('CHECKLIST',checklistItemId);
-
     function handleBackButton() {
         navigation.goBack();
     }
@@ -35,9 +33,7 @@ export function Details() {
             setchecklistItem(response.data);
         } catch (error) {
             Alert.alert('Não foi possível carregar as informações');
-        } finally {
-            console.log('terminou');
-        }
+        } 
     }
 
     const initialRegion = {

@@ -43,26 +43,8 @@ export function Home() {
             setIsLoading(false);
         } finally {
             setIsLoading(false);
-            console.log('CHECK',checklistsData);
         }
     }
-
-    async function fetchCheckItemById() {  
-        try {
-            setIsLoading(true);
-            const response = await api.get(`/v1/checkList/${itemSelected._id}`);
-        } catch (error) {
-            Alert.alert('Não foi possível carregar as informações');
-            setIsLoading(false);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    useFocusEffect(useCallback(() => {
-        fetchCheckItemById();
-    }, [itemSelected]))
-
     useEffect(() => {
         fetchCheckLists();
     }, [])
