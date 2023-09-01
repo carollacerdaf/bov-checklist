@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Alert, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
@@ -5,14 +6,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes'
 
+import { useApp } from '@hooks/useApp'
+
 import { Header } from "@components/Header"
 import { Input } from "@components/Input"
 import { Button } from "@components/Button"
 
-import { AppError } from '@utils/AppError';
-
 import { Container, Form } from "./styles"
-import { api } from '@service/api';
 import { registerSchema } from '@schema/index';
 
 type FormDataProps = {
@@ -21,21 +21,25 @@ type FormDataProps = {
     city: string;
     supervisor: string;
     type: string;
-    milkAmount: string;
-    cowsHead: string;
+    milkAmount: number;
+    cowsHead: number;
+    hadSupervision: boolean;
 }
 
 export function Register() {
+    const { register } = useApp();
+    const [isLoading, setIsLoading] = useState(false);
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
             name: 'Laura',
             city: 'Washington',
-            cowsHead: '21',
+            cowsHead: 20,
             farm: 'WashingtonFarm',
-            milkAmount: '100',
+            milkAmount: 100,
             supervisor: 'Carlos',
-            type: 'Dropdown AQUI'
+            type: 'Dropdown AQUI',
+            hadSupervision: false,
         },
         resolver: yupResolver(registerSchema)
     });
@@ -47,41 +51,16 @@ export function Register() {
     }
 
     async function handleForm(data: FormDataProps) {
-        try {
-            const response = await api.post('/v1/checkList', {
-                "checklists": [
-                    {
-                        "_id": "1",
-                        "type": "",
-                        "amount_of_milk_produced": 300,
-                        "number_of_cows_head": 17,
-                        "had_supervision": true,
-                        "farmer": {
-                            "name": "Fazenda São Rock",
-                            "city": "São Rock"
-                        },
-                        "from": {
-                            "name": "Luciano Camargo"
-                        },
-                        "to": {
-                            "name": "Fernando Siqueira"
-                        },
-                        "location": {
-                            "latitude": -23.5,
-                            "longitude": -46.6
-                        },
-                        "created_at": "2022-02-01T10:10:21.748Z",
-                        "updated_at": "2022-02-01T10:10:21.748Z"
-                    }
-                ]
-            });
-        } catch (error) {
-            const isAppError = error instanceof AppError;
-            const title = isAppError ? error.message : 'Não foi possível realizar o cadastro. Tente mais tarde.'
-            Alert.alert('Ocorreu um erro', title);
-
+        try{
+            setIsLoading(true);
+            await register(data).then(() => {
+                navigation.goBack();
+            })
+        }catch(error) {
+            Alert.alert('Não foi possível realizar o cadastro.Tente novamente.');
+            setIsLoading(false);
         }
-
+        
     }
 
     return (
@@ -164,7 +143,7 @@ export function Register() {
                             <Input
                                 title="Quantidade de Leite / mês"
                                 onChangeText={onChange}
-                                value={value}
+                                value={value.toString()}
                                 errorMessage={errors.milkAmount?.message}
                             />
                         )}
@@ -176,7 +155,7 @@ export function Register() {
                         render={({ field: { onChange, value } }) => (
                             <Input title="Quantidade de cabeça de gado"
                                 onChangeText={onChange}
-                                value={value}
+                                value={value.toString()}
                                 errorMessage={errors.cowsHead?.message}
                                 onSubmitEditing={handleSubmit(handleForm)}
                                 returnKeyType='send'
@@ -184,7 +163,7 @@ export function Register() {
                         )}
                     />
 
-                    <Button title="Cadastrar" onPress={handleSubmit(handleForm)} />
+                    <Button title="Cadastrar" onPress={handleSubmit(handleForm)} isLoading={isLoading} />
                 </Form>
             </ScrollView>
         </Container>

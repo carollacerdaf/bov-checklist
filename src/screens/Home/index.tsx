@@ -1,94 +1,85 @@
-import { useState } from 'react';
-import { FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useState, useEffect, useCallback } from 'react';
+import { Alert, FlatList } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import { Header } from '@components/Header'
 import { ChecklistCard } from '@components/ChecklistCard';
 import { Button } from '@components/Button';
+import { ChecklistDTO } from '@dtos/ChecklistDTO';
 
 import { Container } from './styles'
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes';
+import { useApp } from '@hooks/useApp';
+import { api } from '@service/api';
 
 export function Home() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [checklistsData, setChecklistsData] = useState<ChecklistDTO[]>([]);
+    const [itemSelected, setItemSelected] = useState<ChecklistDTO>({} as ChecklistDTO);
 
+
+    const { checkLists } = useApp();
     function formatDate(isodate: string): string {
         return new Date(isodate).toISOString().split('T')[0].split('-').reverse().join('/')
     }
 
-    const [farmsData, setFarmsData] = useState([
-        {
-            "_id": 77777275,
-            "type": "Antibiótico",
-            "amount_of_milk_produced": "200",
-            "farmer": {
-                "name": "Marianos",
-                "city": "São Paulo"
-            },
-            "from": {
-                "name": "Mariano Silva"
-            },
-            "to": {
-                "name": "Thiago Moraes"
-            },
-            "number_of_cows_head": "25",
-            "had_supervision": true,
-            "location": {
-                "latitude": -23.5,
-                "longitude": -46.6
-            },
-            "created_at": "2023-04-15T04:54:33.000Z",
-            "updated_at": "2023-04-15T04:54:33.000Z",
-            "__v": 0
-        },
-        {
-            "_id": 20386748,
-            "type": "BPA",
-            "amount_of_milk_produced": "25",
-            "farmer": {
-                "city": "Campos do Jordão",
-                "name": "Fazenoda do Paulo"
-            },
-            "from": {
-                "name": "João Paulo"
-            },
-            "to": {
-                "name": "Leonardo"
-            },
-            "number_of_cows_head": "2",
-            "had_supervision": false,
-            "location": {
-                "latitude": 25.5,
-                "longitude": 32.5
-            },
-            "created_at": "2023-04-16T15:04:48.000Z",
-            "updated_at": "2023-04-16T15:04:48.000Z",
-            "__v": 0
-        }
-    ]);
-
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    function handleDetailScreen() {
-        navigation.navigate('details');
+    function handleDetailScreen(checklistItemId: string ) {
+        //navigation.navigate('details', checklistItemId);
     }
 
     function handleRegisterScreen() {
         navigation.navigate('register');
     }
+
+    async function fetchCheckLists() {
+        try {
+            setIsLoading(true);
+            const response = await api.get('/v1/checkList');
+            setChecklistsData(response.data);
+        } catch (error) {
+            Alert.alert('Não foi possível carregar as informações');
+            setIsLoading(false);
+        } finally {
+            setIsLoading(false);
+            console.log('CHECK',checklistsData);
+        }
+    }
+
+    async function fetchCheckItemById() {  
+        try {
+            setIsLoading(true);
+            const response = await api.get(`/v1/checkList/${itemSelected._id}`);
+        } catch (error) {
+            Alert.alert('Não foi possível carregar as informações');
+            setIsLoading(false);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useFocusEffect(useCallback(() => {
+        fetchCheckItemById();
+    }, [itemSelected]))
+
+    useEffect(() => {
+        fetchCheckLists();
+    }, [])
     return (
         <Container>
-            <Header title='BOVChecklist'/>
+            <Header title='BOVChecklist' />
             <FlatList
-                data={farmsData}
+                data={checklistsData}
                 renderItem={({ item }) => (
                     <ChecklistCard name={item.from.name}
                         city={item.farmer.city}
                         farm={item.farmer.name}
                         created_date={formatDate(item.created_at)}
-                        onPress={handleDetailScreen}
+                        onPress={() => handleDetailScreen(item._id)}
                     />
                 )}
-                keyExtractor={item => item.created_at}
+                keyExtractor={item => item._id}
                 showsVerticalScrollIndicator={false}
                 style={{ padding: 20 }}
             />

@@ -1,7 +1,9 @@
-export type ItemDTO = {
-    _id: number,
+export type ChecklistDTO = {
+    _id: string,
     type: string,
-    amount_of_milk_produced: string,
+    amount_of_milk_produced: number,
+    number_of_cows_head: number,
+    had_supervision: boolean,
     farmer: {
       name: string,
       city: string
@@ -12,13 +14,10 @@ export type ItemDTO = {
     to: {
       name: string
     },
-    number_of_cows_head: string,
-    had_supervision: boolean,
     location: {
       latitude: number,
       longitude: number
     },
     created_at: string,
-    updated_at: string,
-    __v: number
-}
+    updated_at: string
+  }

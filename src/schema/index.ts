@@ -7,6 +7,7 @@ export const registerSchema = yup.object({
     city: yup.string().required('Informe a cidade'),
     supervisor: yup.string().required('Informe o nome do(a) supervisor(a)'),
     type: yup.string().required('Informe o tipo'),
-    milkAmount: yup.string().required('Informe a quantidade'),
-    cowsHead: yup.string().required('Informe a quantidade'),
+    milkAmount: yup.number().required('Informe a quantidade'),
+    cowsHead: yup.number().required('Informe a quantidade'),
+    hadSupervision: yup.boolean().default(false),
 });

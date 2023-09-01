@@ -25,6 +25,9 @@
       "@schema/*": [
         "./src/schema/*"
       ],
+      "@dtos/*": [
+        "./src/dtos/*"
+      ],
     }
   }
 }
