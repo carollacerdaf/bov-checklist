@@ -3,8 +3,8 @@ import { TextInput } from "react-native";
 
 export const Container = styled.View`
     flex-direction: column;
-    margin-bottom: 10px;
-    margin-top: 14px;
+    margin-bottom: 0px;
+    margin-top: 5px;
 `;
 
 export const Title = styled.Text`
@@ -13,6 +13,7 @@ font-family: ${theme.FONT_FAMILY.BOLD};
 font-size: ${theme.FONT_SIZE.SM}px;
 color: ${theme.COLORS.GRAY_200};
 margin-bottom: 2px;
+margin-top: 2px;
 `};
 `;
 

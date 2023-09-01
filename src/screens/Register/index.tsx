@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Alert, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
@@ -14,6 +14,8 @@ import { Button } from "@components/Button"
 
 import { Container, Form } from "./styles"
 import { registerSchema } from '@schema/index';
+import { RadioButtonProps, RadioGroup } from 'react-native-radio-buttons-group'
+import { RadioButton } from '@components/RadioButton'
 
 type FormDataProps = {
     name: string;
@@ -32,13 +34,13 @@ export function Register() {
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
-            name: 'Laura',
-            city: 'Washington',
-            cowsHead: 20,
-            farm: 'WashingtonFarm',
-            milkAmount: 100,
-            supervisor: 'Carlos',
-            type: 'Dropdown AQUI',
+            name: '',
+            city: '',
+            cowsHead: 0,
+            farm: '',
+            milkAmount: 0,
+            supervisor: '',
+            type: '',
             hadSupervision: false,
         },
         resolver: yupResolver(registerSchema)
@@ -51,17 +53,19 @@ export function Register() {
     }
 
     async function handleForm(data: FormDataProps) {
-        try{
+        try {
             setIsLoading(true);
             await register(data).then(() => {
                 navigation.goBack();
             })
-        }catch(error) {
+        } catch (error) {
             Alert.alert('Não foi possível realizar o cadastro.Tente novamente.');
             setIsLoading(false);
         }
-        
+
     }
+    const [selectedId, setSelectedId] = useState<string | undefined>();
+
 
     return (
         <Container>
@@ -122,20 +126,15 @@ export function Register() {
                             />
                         )}
                     />
-
                     <Controller
                         control={control}
-                        name='type'
+                        name="type"
+                        defaultValue=''
                         render={({ field: { onChange, value } }) => (
-                            <Input
-                                title="Tipo"
-                                onChangeText={onChange}
-                                value={value}
-                                errorMessage={errors.type?.message}
-                            />
+                            <RadioButton title='Tipo' onChange={onChange} value={value} id='' />
+
                         )}
                     />
-
                     <Controller
                         control={control}
                         name='milkAmount'
