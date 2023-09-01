@@ -2,8 +2,6 @@ import { Alert, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import Toast from 'react-native-toast-message';
-import * as yup from 'yup';
 
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes'
 
@@ -15,7 +13,7 @@ import { AppError } from '@utils/AppError';
 
 import { Container, Form } from "./styles"
 import { api } from '@service/api';
-import { useApp } from '@hooks/useApp';
+import { registerSchema } from '@schema/index';
 
 type FormDataProps = {
     name: string;
@@ -26,16 +24,6 @@ type FormDataProps = {
     milkAmount: string;
     cowsHead: string;
 }
-
-const registerSchema = yup.object({
-    name: yup.string().required('Informe o nome'),
-    farm: yup.string().required('Informe o nome da fazenda'),
-    city: yup.string().required('Informe a cidade'),
-    supervisor: yup.string().required('Informe o nome do(a) supervisor(a)'),
-    type: yup.string().required('Informe o tipo'),
-    milkAmount: yup.string().required('Informe a quantidade'),
-    cowsHead: yup.string().required('Informe a quantidade'),
-});
 
 export function Register() {
 
