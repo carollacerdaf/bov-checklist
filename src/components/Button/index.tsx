@@ -1,6 +1,6 @@
-import { ActivityIndicator, TouchableOpacityProps } from 'react-native'
+import { TouchableOpacityProps } from 'react-native'
 import { Container, Title } from './styles'
-import { useTheme } from 'styled-components'
+import { Loading } from '@components/Loading';
 
 type Props = TouchableOpacityProps & {
     title: string;
@@ -9,11 +9,10 @@ type Props = TouchableOpacityProps & {
 }
 
 export function Button({ title, onPress, isLoading, ...rest }: Props) {
-    const {COLORS} = useTheme();
     return (
         <Container {...rest} onPress={onPress}>
             {isLoading ?
-                <ActivityIndicator size="small" color={COLORS.WHITE} /> :
+                <Loading /> :
                 <Title>{title}</Title>}
 
         </Container>

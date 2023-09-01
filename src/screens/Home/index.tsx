@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, FlatList } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { Header } from '@components/Header'
 import { ChecklistCard } from '@components/ChecklistCard';
@@ -9,7 +9,6 @@ import { ChecklistDTO } from '@dtos/ChecklistDTO';
 
 import { Container } from './styles'
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes';
-import { useApp } from '@hooks/useApp';
 import { api } from '@service/api';
 
 export function Home() {
@@ -17,8 +16,6 @@ export function Home() {
     const [checklistsData, setChecklistsData] = useState<ChecklistDTO[]>([]);
     const [itemSelected, setItemSelected] = useState<ChecklistDTO>({} as ChecklistDTO);
 
-
-    const { checkLists } = useApp();
     function formatDate(isodate: string): string {
         return new Date(isodate).toISOString().split('T')[0].split('-').reverse().join('/')
     }
@@ -26,7 +23,7 @@ export function Home() {
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
     function handleDetailScreen(checklistItemId: string ) {
-        //navigation.navigate('details', checklistItemId);
+        navigation.navigate('details', { checklistItemId });
     }
 
     function handleRegisterScreen() {

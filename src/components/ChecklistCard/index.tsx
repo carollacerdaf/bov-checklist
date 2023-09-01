@@ -1,4 +1,3 @@
-import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { Container, Icon, SectionData } from "./styles";
 import { ListData } from '@components/ListData';
 

@@ -5,7 +5,7 @@ import { Register } from '@screens/Register';
 
 type AppRoutes = {
     home: undefined,
-    details: undefined,
+    details: { checklistItemId: string },
     register: undefined,
 }
 
@@ -15,7 +15,7 @@ const { Navigator, Screen } = createNativeStackNavigator<AppRoutes>();
 
 export function AppRoutes() {
     return (
-        <Navigator screenOptions={{headerShown: false}}>
+        <Navigator screenOptions={{ headerShown: false }}>
             <Screen name="home" component={Home} />
             <Screen name="details" component={Details} />
             <Screen name="register" component={Register} />
