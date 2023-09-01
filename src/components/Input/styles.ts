@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components/native";
+import styled, { css } from "styled-components/native";
 import { TextInput } from "react-native";
 
 export const Container = styled.View`
@@ -28,4 +28,11 @@ font-family: ${theme.FONT_FAMILY.REGULAR};
 font-size: ${theme.FONT_SIZE.SM}px;
 background-color: ${theme.COLORS.GRAY_100};
 color: ${theme.COLORS.GRAY_200};
+`};`;
+
+export const ErrorText = styled.Text`
+    ${({ theme }) => css`
+        font-family: ${theme.FONT_FAMILY.REGULAR};
+        font-size: ${theme.FONT_SIZE.SM}px;
+        color: ${theme.COLORS.RED};
 `};`;

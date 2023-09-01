@@ -59,41 +59,41 @@ export function Register() {
     }
 
     async function handleForm(data: FormDataProps) {
-        try{
+        try {
             const response = await api.post('/v1/checkList', {
                 "checklists": [
-                  {
-                    "_id": "1",
-                    "type": "",
-                    "amount_of_milk_produced": 300,
-                    "number_of_cows_head": 17,
-                    "had_supervision": true,
-                    "farmer": {
-                      "name": "Fazenda São Rock",
-                      "city": "São Rock"
-                    },
-                    "from": {
-                      "name": "Luciano Camargo"
-                    },
-                    "to": {
-                      "name": "Fernando Siqueira"
-                    },
-                    "location": {
-                      "latitude": -23.5,
-                      "longitude": -46.6
-                    },
-                    "created_at": "2022-02-01T10:10:21.748Z",
-                    "updated_at": "2022-02-01T10:10:21.748Z"
-                  }
+                    {
+                        "_id": "1",
+                        "type": "",
+                        "amount_of_milk_produced": 300,
+                        "number_of_cows_head": 17,
+                        "had_supervision": true,
+                        "farmer": {
+                            "name": "Fazenda São Rock",
+                            "city": "São Rock"
+                        },
+                        "from": {
+                            "name": "Luciano Camargo"
+                        },
+                        "to": {
+                            "name": "Fernando Siqueira"
+                        },
+                        "location": {
+                            "latitude": -23.5,
+                            "longitude": -46.6
+                        },
+                        "created_at": "2022-02-01T10:10:21.748Z",
+                        "updated_at": "2022-02-01T10:10:21.748Z"
+                    }
                 ]
-              });
-        }catch (error) {
+            });
+        } catch (error) {
             const isAppError = error instanceof AppError;
             const title = isAppError ? error.message : 'Não foi possível realizar o cadastro. Tente mais tarde.'
             Alert.alert('Ocorreu um erro', title);
-            
+
         }
-        
+
     }
 
     return (
@@ -111,6 +111,7 @@ export function Register() {
                                 title="Nome"
                                 onChangeText={onChange}
                                 value={value}
+                                errorMessage={errors.name?.message}
                             />
                         )}
                     />
@@ -123,6 +124,7 @@ export function Register() {
                                 title="Fazenda"
                                 onChangeText={onChange}
                                 value={value}
+                                errorMessage={errors.farm?.message}
                             />
                         )}
                     />
@@ -134,7 +136,10 @@ export function Register() {
                             <Input
                                 title="Cidade"
                                 onChangeText={onChange}
-                                value={value} />
+                                value={value}
+                                errorMessage={errors.city?.message}
+
+                            />
                         )}
                     />
 
@@ -145,7 +150,9 @@ export function Register() {
                             <Input
                                 title="Supervisor"
                                 onChangeText={onChange}
-                                value={value} />
+                                value={value}
+                                errorMessage={errors.supervisor?.message}
+                            />
                         )}
                     />
 
@@ -156,7 +163,9 @@ export function Register() {
                             <Input
                                 title="Tipo"
                                 onChangeText={onChange}
-                                value={value} />
+                                value={value}
+                                errorMessage={errors.type?.message}
+                            />
                         )}
                     />
 
@@ -167,7 +176,9 @@ export function Register() {
                             <Input
                                 title="Quantidade de Leite / mês"
                                 onChangeText={onChange}
-                                value={value} />
+                                value={value}
+                                errorMessage={errors.milkAmount?.message}
+                            />
                         )}
                     />
 
@@ -178,6 +189,7 @@ export function Register() {
                             <Input title="Quantidade de cabeça de gado"
                                 onChangeText={onChange}
                                 value={value}
+                                errorMessage={errors.cowsHead?.message}
                                 onSubmitEditing={handleSubmit(handleForm)}
                                 returnKeyType='send'
                             />
