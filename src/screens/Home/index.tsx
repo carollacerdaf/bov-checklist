@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Alert, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { Header } from '@components/Header'
 import { ChecklistCard } from '@components/ChecklistCard';
@@ -42,9 +42,10 @@ export function Home() {
             setIsLoading(false);
         }
     }
-    useEffect(() => {
+
+    useFocusEffect(useCallback(() => {
         fetchCheckLists();
-    }, [])
+    }, []));
     return (
         <Container>
             <Header title='BOVChecklist' />
