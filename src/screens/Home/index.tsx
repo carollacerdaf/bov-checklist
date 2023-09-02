@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import { Alert, FlatList } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
@@ -15,13 +15,14 @@ import { DetailsDTO } from '@dtos/DetailsDTO';
 import { Loading } from '@components/Loading';
 import { getChecklist } from '@storage/getChecklist';
 import { useApp } from '@hooks/useApp';
+import { AppContext } from '@contexts/AppContext';
 
 export function Home() {
     const [isLoading, setIsLoading] = useState(false);
-    const [checklistsData, setChecklistsData] = useState<ChecklistDTO[]>([]);
-    const [itemSelected, setItemSelected] = useState<ChecklistDTO>({} as ChecklistDTO);
 
-    const { register } = useApp();
+    const {items} = useContext(AppContext)
+
+    console.log('CONTEXT', items)
 
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -37,20 +38,7 @@ export function Home() {
         });
     }
 
-    async function fetchCheckLists() {
-        try {
-            setIsLoading(true);
-            const response = await api.get('/v1/checkList');
-            setChecklistsData(response.data);
-        } catch (error) {
-            Alert.alert('Não foi possível carregar as informações');
-            setIsLoading(false);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    async function storageData() {
+    /*async function storageData() {
         try {
             const storedItems = await getChecklist();
             if (storedItems !== null) {
@@ -66,17 +54,13 @@ export function Home() {
         } finally {
             setIsLoading(false);
         }
-    }
-
-    useFocusEffect(useCallback(() => {
-        fetchCheckLists();
-    }, []));
+    }*/
     return (
         <Container>
             <Header title='BOVChecklist' />
             {isLoading ? <Loading /> :
                 <FlatList
-                    data={checklistsData}
+                    data={items}
                     renderItem={({ item }) => (
                         <ChecklistCard name={item.to.name}
                             city={item.farmer.city}

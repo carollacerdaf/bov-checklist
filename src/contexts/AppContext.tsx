@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 
 import uuid from 'react-native-uuid';
@@ -7,10 +7,9 @@ import { ItemDTO } from "@dtos/ItemDTO";
 import { api } from '@service/api';
 import { ChecklistDTO } from "@dtos/ChecklistDTO";
 import { DetailsDTO } from "@dtos/DetailsDTO";
-import { getChecklist } from "@storage/getChecklist";
 
 export type AppContextDataProps = {
-  item: ItemDTO;
+  items: ChecklistDTO[];
   register: (item: ItemDTO) => Promise<void>;
   update: (item: DetailsDTO, data: ItemDTO) => Promise<void>;
   checkLists: () => Promise<void>;
@@ -23,13 +22,11 @@ type AppContextProviderProps = {
 export const AppContext = createContext<AppContextDataProps>({} as AppContextDataProps);
 
 export function AppContextProvider({ children }: AppContextProviderProps) {
-  const [item, setItem] = useState<ItemDTO>({} as ItemDTO);
+  const [items, setItems] = useState([]);
   const idNumber = uuid.v1().toString().replace(/\D/g, '');
 
   async function register(data: ItemDTO) {
     try {
-      console.log('got here');
-      console.log(data);
       const response = await api.post('/v1/checklist', {
         "checklists": [
           {
@@ -57,10 +54,6 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
           }
         ]
       });
-      if (response.data) {
-        console.log('DEU RESPONSE', response)
-        setItem(data)
-      }
     } catch (error) {
       Alert.alert('Ocorreu um erro', 'Não foi possível realizar o cadastro. Tente mais tarde.');
     }
@@ -96,14 +89,22 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   async function checkLists() {
     api.get('/v1/checkList').then((response) => {
-      return response;
+      setItems(response.data);
     }).catch((err) => {
       throw err;
     })
   }
+
+  useEffect(() => {
+    api.get('/v1/checkList').then((response) => {
+      setItems(response.data);
+    }).catch((err) => {
+      throw err;
+    })
+  }, []);
   return (
     <AppContext.Provider value={
-      { item, register, checkLists, update }}>
+      { items, register, checkLists, update }}>
       {children}
     </AppContext.Provider>
   );
