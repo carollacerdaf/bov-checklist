@@ -32,7 +32,6 @@ type FormDataProps = {
 }
 
 export function Register() {
-
     const [isLoading, setIsLoading] = useState(false);
 
     const { register } = useApp();
@@ -174,6 +173,22 @@ export function Register() {
                                 onSubmitEditing={handleSubmit(handleForm)}
                                 returnKeyType='send'
                             />
+                        )}
+                    />
+
+<Controller
+                        control={control}
+                        name="hadSupervision"
+                        render={({ field: { onChange, value } }) => (
+                            <BouncyCheckbox
+                                size={25}
+                                fillColor={COLORS.BLUE}
+                                unfillColor={COLORS.WHITE}
+                                text="Houve supervisão"
+                                innerIconStyle={{ borderWidth: 2 }}
+                                onPress={() => onChange(value = true)}
+                            />
+
                         )}
                     />
 
