@@ -16,6 +16,9 @@ import { Container, Form } from "./styles"
 import { registerSchema } from '@schema/index';
 import { RadioButtonProps, RadioGroup } from 'react-native-radio-buttons-group'
 import { RadioButton } from '@components/RadioButton'
+import BouncyCheckbox from 'react-native-bouncy-checkbox'
+import { useTheme } from 'styled-components'
+import { Checkbox } from '@components/Checkbox'
 
 type FormDataProps = {
     name: string;
@@ -29,8 +32,11 @@ type FormDataProps = {
 }
 
 export function Register() {
-    const { register } = useApp();
+
     const [isLoading, setIsLoading] = useState(false);
+
+    const { register } = useApp();
+    const { COLORS } = useTheme();
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
@@ -53,6 +59,7 @@ export function Register() {
     }
 
     async function handleForm(data: FormDataProps) {
+        console.log(data);
         try {
             setIsLoading(true);
             await register(data).then(() => {
@@ -64,12 +71,11 @@ export function Register() {
         }
 
     }
-    const [selectedId, setSelectedId] = useState<string | undefined>();
 
 
     return (
         <Container>
-            <Header title='Cadastro' showBackButton onPress={handleBackButton} />
+            <Header title='Cadastro' onPress={handleBackButton} showBackButton />
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
@@ -128,10 +134,9 @@ export function Register() {
                     />
                     <Controller
                         control={control}
-                        name="type"
-                        defaultValue=''
+                        name="hadSupervision"
                         render={({ field: { onChange, value } }) => (
-                            <RadioButton title='Tipo' onChange={onChange} value={value} id='' />
+                            <Checkbox text='Houve supervisão' onPress={() => onChange(value = true)} />
 
                         )}
                     />
@@ -145,6 +150,16 @@ export function Register() {
                                 value={value.toString()}
                                 errorMessage={errors.milkAmount?.message}
                             />
+                        )}
+                    />
+
+                    <Controller
+                        control={control}
+                        name="type"
+                        defaultValue=''
+                        render={({ field: { onChange, value } }) => (
+                            <RadioButton title='Tipo' onChange={onChange} value={value} id='' />
+
                         )}
                     />
 

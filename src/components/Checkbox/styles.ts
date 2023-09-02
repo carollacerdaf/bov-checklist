@@ -1,5 +1,5 @@
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import styled, {css} from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
 export const Container = styled.View`
      width: 100%;
@@ -13,6 +13,13 @@ export const Title = styled.Text`
         font-family: ${theme.FONT_FAMILY.BOLD};
         font-size: ${theme.FONT_SIZE.SM}px;
         color: ${theme.COLORS.GRAY_200};
-        margin-bottom: 2px;
     `};
 `;
+
+export const Checkbox = styled(BouncyCheckbox).attrs(({ theme }) => ({
+    size: 20,
+    fillColor: theme.COLORS.BLACK,
+    unfillColor: theme.COLORS.WHITE,
+    iconStyle: { borderRadius: 0 },
+}))`
+  `;

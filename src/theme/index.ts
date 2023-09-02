@@ -1,6 +1,7 @@
 export default {
     COLORS: {
         WHITE: '#FFFFFF',
+        BLACK: '#000000',
 
         ORANGE: '#FE914D',
         BLUE: '#4EA2CF',
@@ -17,5 +18,6 @@ export default {
     FONT_SIZE: {
         SM: 14,
         MD: 16,
+        LG: 18,
     }
 };
