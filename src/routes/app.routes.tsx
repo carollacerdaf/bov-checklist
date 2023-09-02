@@ -2,11 +2,12 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import { Home } from '@screens/Home';
 import { Details } from '@screens/Details';
 import { Register } from '@screens/Register';
+import { ChecklistDTO } from '@dtos/ChecklistDTO';
 
 type AppRoutes = {
     home: undefined,
     details: { checklistItemId: string },
-    register: undefined,
+    register?: { checklistItem: ChecklistDTO },
 }
 
 export type AppNavigatorRoutesProps = NativeStackNavigationProp<AppRoutes>;

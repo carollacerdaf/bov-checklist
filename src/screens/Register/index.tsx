@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Alert, ScrollView } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -19,6 +19,7 @@ import { RadioButton } from '@components/RadioButton'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import { useTheme } from 'styled-components'
 import { Checkbox } from '@components/Checkbox'
+import { ChecklistDTO } from '@dtos/ChecklistDTO'
 
 type FormDataProps = {
     name: string;
@@ -31,11 +32,20 @@ type FormDataProps = {
     hadSupervision: boolean;
 }
 
+type RouteParamsProps = {
+    checklistItem: ChecklistDTO;
+}
+
 export function Register() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const { register } = useApp();
+    const { register, update } = useApp();
     const { COLORS } = useTheme();
+
+    const route = useRoute();
+
+    const { checklistItem } = route.params as RouteParamsProps;
+    console.log(checklistItem);
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
@@ -58,7 +68,6 @@ export function Register() {
     }
 
     async function handleForm(data: FormDataProps) {
-        console.log(data);
         try {
             setIsLoading(true);
             await register(data).then(() => {
@@ -69,6 +78,18 @@ export function Register() {
             setIsLoading(false);
         }
 
+    }
+
+    async function handleUpdate(checklistItem: ChecklistDTO) {
+        try {
+            setIsLoading(true);
+            await update(checklistItem).then(() => {
+                navigation.goBack();
+            })
+        } catch (error) {
+            Alert.alert('Não foi possível realizar o cadastro.Tente novamente.');
+            setIsLoading(false);
+        }
     }
 
 
@@ -86,7 +107,7 @@ export function Register() {
                             <Input
                                 title="Nome"
                                 onChangeText={onChange}
-                                value={value}
+                                value={checklistItem ? checklistItem.to.name : value}
                                 errorMessage={errors.name?.message}
                             />
                         )}
@@ -99,7 +120,7 @@ export function Register() {
                             <Input
                                 title="Fazenda"
                                 onChangeText={onChange}
-                                value={value}
+                                value={checklistItem ? checklistItem.farmer.name : value}
                                 errorMessage={errors.farm?.message}
                             />
                         )}
@@ -112,7 +133,7 @@ export function Register() {
                             <Input
                                 title="Cidade"
                                 onChangeText={onChange}
-                                value={value}
+                                value={checklistItem ? checklistItem.farmer.city : value}
                                 errorMessage={errors.city?.message}
 
                             />
@@ -126,7 +147,7 @@ export function Register() {
                             <Input
                                 title="Supervisor"
                                 onChangeText={onChange}
-                                value={value}
+                                value={checklistItem ? checklistItem.from.name : value}
                                 errorMessage={errors.supervisor?.message}
                             />
                         )}
@@ -135,7 +156,8 @@ export function Register() {
                         control={control}
                         name="hadSupervision"
                         render={({ field: { onChange, value } }) => (
-                            <Checkbox text='Houve supervisão' onPress={() => onChange(value = true)} />
+                            <Checkbox text='Houve supervisão'
+                                onPress={() => onChange(checklistItem ? checklistItem.had_supervision : value = true)} />
 
                         )}
                     />
@@ -146,7 +168,7 @@ export function Register() {
                             <Input
                                 title="Quantidade de Leite / mês"
                                 onChangeText={onChange}
-                                value={value.toString()}
+                                value={checklistItem ? checklistItem.amount_of_milk_produced.toString() : value.toString()}
                                 errorMessage={errors.milkAmount?.message}
                             />
                         )}
@@ -157,7 +179,8 @@ export function Register() {
                         name="type"
                         defaultValue=''
                         render={({ field: { onChange, value } }) => (
-                            <RadioButton title='Tipo' onChange={onChange} value={value} id='' />
+                            <RadioButton title='Tipo' onChange={onChange}
+                                value={checklistItem ? checklistItem.type : value} id='' />
 
                         )}
                     />
@@ -168,7 +191,7 @@ export function Register() {
                         render={({ field: { onChange, value } }) => (
                             <Input title="Quantidade de cabeça de gado"
                                 onChangeText={onChange}
-                                value={value.toString()}
+                                value={checklistItem ? checklistItem.number_of_cows_head.toString() : value.toString()}
                                 errorMessage={errors.cowsHead?.message}
                                 onSubmitEditing={handleSubmit(handleForm)}
                                 returnKeyType='send'
@@ -176,23 +199,7 @@ export function Register() {
                         )}
                     />
 
-<Controller
-                        control={control}
-                        name="hadSupervision"
-                        render={({ field: { onChange, value } }) => (
-                            <BouncyCheckbox
-                                size={25}
-                                fillColor={COLORS.BLUE}
-                                unfillColor={COLORS.WHITE}
-                                text="Houve supervisão"
-                                innerIconStyle={{ borderWidth: 2 }}
-                                onPress={() => onChange(value = true)}
-                            />
-
-                        )}
-                    />
-
-                    <Button title="Cadastrar" onPress={handleSubmit(handleForm)} isLoading={isLoading} />
+                    <Button title="Cadastrar" onPress={checklistItem ? () => handleUpdate(checklistItem) : handleSubmit(handleForm)} isLoading={isLoading} />
                 </Form>
             </ScrollView>
         </Container>

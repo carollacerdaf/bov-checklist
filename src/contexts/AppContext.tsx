@@ -5,10 +5,12 @@ import uuid from 'react-native-uuid';
 
 import { ItemDTO } from "@dtos/ItemDTO";
 import { api } from '@service/api';
+import { ChecklistDTO } from "@dtos/ChecklistDTO";
 
 export type AppContextDataProps = {
   item: ItemDTO;
   register: (item: ItemDTO) => Promise<void>;
+  update: (item: ChecklistDTO) => Promise<void>;
   checkLists: () => Promise<void>;
 }
 
@@ -59,6 +61,33 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     }
   }
 
+  async function update(data: ChecklistDTO) {
+    try {
+      const response = await api.post(`/v1/checklist/${data._id}`, {
+          "type": data.type,
+          "amount_of_milk_produced": data.amount_of_milk_produced,
+          "number_of_cows_head": data.number_of_cows_head,
+          "had_supervision": data.had_supervision,
+          "farmer": {
+            "name": data.farmer.name,
+            "city": data.farmer.city,
+          },
+          "from": {
+            "name": data.from.name
+          },
+          "to": {
+            "name": data.to.name
+          },
+          "location": {
+            "latitude": data.location.latitude,
+            "longitude": data.location.longitude
+          }
+      });
+    } catch (error) {
+      Alert.alert('Ocorreu um erro', 'Não foi possível realizar a atualização. Tente mais tarde.');
+    }
+  }
+
   async function checkLists() {
     api.get('/v1/checkList').then((response) => {
       return response;
@@ -68,7 +97,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   }
   return (
     <AppContext.Provider value={
-      { item, register, checkLists }}>
+      { item, register, checkLists, update }}>
       {children}
     </AppContext.Provider>
   );

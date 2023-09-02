@@ -44,6 +44,10 @@ export function Details() {
         }
     }
 
+    function handleUpdateScreen(checklistItem: ChecklistDTO) {
+        navigation.navigate('register', { checklistItem });
+    }
+
     useFocusEffect(useCallback(() => {
         fetchItemDetails();
     }, []));
@@ -67,8 +71,8 @@ export function Details() {
                             <ListData caption="Supervisão" title={checklistItem.from.name} />
                         </Section>
 
-                        <TouchableOpacity>
-                            <Icon />
+                        <TouchableOpacity onPress={() => handleUpdateScreen(checklistItem)}>
+                            <Icon/>
                         </TouchableOpacity>
                     </ContainerData>
                     <Map latitude={checklistItem.location.latitude}
