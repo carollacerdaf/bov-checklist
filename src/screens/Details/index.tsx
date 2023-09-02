@@ -1,5 +1,4 @@
 import { TouchableOpacity, Alert } from "react-native";
-import { PROVIDER_GOOGLE } from 'react-native-maps';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 
 import { AppNavigatorRoutesProps } from "src/routes/app.routes";
@@ -8,11 +7,12 @@ import { ListData } from "@components/ListData";
 import { Header } from "@components/Header";
 import { ChecklistDTO } from "@dtos/ChecklistDTO";
 
-import { Container, ContainerData, Icon, MapContainer, Section, StyledMapView } from "./styles";
+import { Container, ContainerData, Icon, Section } from "./styles";
 import { api } from "@service/api";
-import { useCallback, useEffect, useState } from "react";
-import { useTheme } from "styled-components";
+import { useCallback, useState } from "react";
 import { Loading } from "@components/Loading";
+import { Map } from '@components/Map'
+import { formatDate } from "@utils/DateFormat";
 
 type RouteParamsProps = {
     checklistItemId: string;
@@ -20,10 +20,9 @@ type RouteParamsProps = {
 
 export function Details() {
     const [checklistItem, setchecklistItem] = useState<ChecklistDTO>({} as ChecklistDTO);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    const { COLORS } = useTheme();
     const route = useRoute();
 
     const { checklistItemId } = route.params as RouteParamsProps;
@@ -35,11 +34,9 @@ export function Details() {
     async function fetchItemDetails() {
         try {
             setIsLoading(true);
-            await api.get(`/v1/checkList/${checklistItemId}`)
-                .then((response) => {
-                    setchecklistItem(response.data);
-                })
-
+            const response = await api.get(`/v1/checkList/${checklistItemId}`);
+            setchecklistItem(response.data);
+            console.log(response.data);
         } catch (error) {
             Alert.alert('Não foi possível carregar as informações');
         } finally {
@@ -48,13 +45,6 @@ export function Details() {
         }
     }
 
-    const initialRegion = {
-        latitude: -23.5,
-        longitude: -46.6,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-    };
-
     useFocusEffect(useCallback(() => {
         fetchItemDetails();
     }, []));
@@ -62,35 +52,28 @@ export function Details() {
     return (
 
         <Container>
-
             <Header title="Detalhes" showBackButton onPress={handleBackButton} />
-            {isLoading ? <Loading  /> :
+            {isLoading ? <Loading /> :
                 <>
                     <ContainerData>
 
                         <Section>
-                            <ListData caption="Nome" title='' />
-                            <ListData caption="Fazenda" title='' />
-                            <ListData caption="Cidade" title='' />
-                            <ListData caption="Data de criação" title='' />
-                            <ListData caption="Tipo" title='' />
-                            <ListData caption="Quantidade de produtos de leite" title='' />
-                            <ListData caption="Cabeça de gado" title='' />
-                            <ListData caption="Supervisão" title='' />
+                            <ListData caption="Nome" title={checklistItem.to.name} />
+                            <ListData caption="Fazenda" title={checklistItem.farmer.name} />
+                            <ListData caption="Cidade" title={checklistItem.farmer.city} />
+                            <ListData caption="Data de criação" title={formatDate(checklistItem.created_at)} />
+                            <ListData caption="Tipo" title={checklistItem.type} />
+                            <ListData caption="Quantidade de produtos de leite" title={checklistItem.amount_of_milk_produced.toString()} />
+                            <ListData caption="Cabeça de gado" title={checklistItem.number_of_cows_head.toString()} />
+                            <ListData caption="Supervisão" title={checklistItem.from.name} />
                         </Section>
 
                         <TouchableOpacity>
                             <Icon />
                         </TouchableOpacity>
                     </ContainerData>
-
-                    <MapContainer>
-                        <ListData caption="Localização" />
-                        <StyledMapView
-                            provider={PROVIDER_GOOGLE}
-                            initialRegion={initialRegion}
-                        />
-                    </MapContainer>
+                    <Map latitude={checklistItem.location.latitude}
+                        longitude={checklistItem.location.longitude} />
                 </>
             }
 

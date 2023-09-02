@@ -10,19 +10,16 @@ import { ChecklistDTO } from '@dtos/ChecklistDTO';
 import { Container } from './styles'
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes';
 import { api } from '@service/api';
+import { formatDate } from '@utils/DateFormat';
 
 export function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [checklistsData, setChecklistsData] = useState<ChecklistDTO[]>([]);
     const [itemSelected, setItemSelected] = useState<ChecklistDTO>({} as ChecklistDTO);
 
-    function formatDate(isodate: string): string {
-        return new Date(isodate).toISOString().split('T')[0].split('-').reverse().join('/')
-    }
-
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    function handleDetailScreen(checklistItemId: string ) {
+    function handleDetailScreen(checklistItemId: string) {
         navigation.navigate('details', { checklistItemId });
     }
 
