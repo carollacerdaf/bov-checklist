@@ -6,7 +6,7 @@ type Props = {
     onPress?: () => void;
 }
 
-export function Header({ showBackButton = false, title, onPress }: Props) {
+export function Header({ showBackButton = false, title = 'Cadastro', onPress }: Props) {
 
     return (
         <Container>

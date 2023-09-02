@@ -8,7 +8,7 @@ type Props = TouchableOpacityProps & {
     isLoading?: boolean;
 }
 
-export function Button({ title, onPress, isLoading, ...rest }: Props) {
+export function Button({ title='Cadastrar', onPress, isLoading, ...rest }: Props) {
     return (
         <Container {...rest} onPress={onPress}>
             {isLoading ?

@@ -24,7 +24,11 @@ export function Home() {
     }
 
     function handleRegisterScreen() {
-        navigation.navigate('register');
+        navigation.navigate('register', {
+            title: 'Cadastro',
+            buttonTitle: 'Cadastrar',
+            checklistItem: {} as ChecklistDTO
+        });
     }
 
     async function fetchCheckLists() {

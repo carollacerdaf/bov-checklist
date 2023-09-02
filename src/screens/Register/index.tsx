@@ -34,18 +34,18 @@ type FormDataProps = {
 
 type RouteParamsProps = {
     checklistItem: ChecklistDTO;
+    title: string;
+    buttonTitle: string;
 }
 
 export function Register() {
     const [isLoading, setIsLoading] = useState(false);
 
     const { register, update } = useApp();
-    const { COLORS } = useTheme();
 
     const route = useRoute();
 
-    const { checklistItem } = route.params as RouteParamsProps;
-    console.log(checklistItem);
+    const { checklistItem, title, buttonTitle } = route.params as RouteParamsProps;
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
@@ -95,7 +95,7 @@ export function Register() {
 
     return (
         <Container>
-            <Header title='Cadastro' onPress={handleBackButton} showBackButton />
+            <Header title={title} onPress={handleBackButton} showBackButton />
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
@@ -103,11 +103,12 @@ export function Register() {
                     <Controller
                         control={control}
                         name='name'
+                        defaultValue={''}
                         render={({ field: { onChange, value } }) => (
                             <Input
                                 title="Nome"
                                 onChangeText={onChange}
-                                value={checklistItem ? checklistItem.to.name : value}
+                                value={value}
                                 errorMessage={errors.name?.message}
                             />
                         )}
@@ -120,7 +121,7 @@ export function Register() {
                             <Input
                                 title="Fazenda"
                                 onChangeText={onChange}
-                                value={checklistItem ? checklistItem.farmer.name : value}
+                                value={value}
                                 errorMessage={errors.farm?.message}
                             />
                         )}
@@ -133,7 +134,7 @@ export function Register() {
                             <Input
                                 title="Cidade"
                                 onChangeText={onChange}
-                                value={checklistItem ? checklistItem.farmer.city : value}
+                                value={value}
                                 errorMessage={errors.city?.message}
 
                             />
@@ -147,7 +148,7 @@ export function Register() {
                             <Input
                                 title="Supervisor"
                                 onChangeText={onChange}
-                                value={checklistItem ? checklistItem.from.name : value}
+                                value={value}
                                 errorMessage={errors.supervisor?.message}
                             />
                         )}
@@ -157,7 +158,7 @@ export function Register() {
                         name="hadSupervision"
                         render={({ field: { onChange, value } }) => (
                             <Checkbox text='Houve supervisão'
-                                onPress={() => onChange(checklistItem ? checklistItem.had_supervision : value = true)} />
+                                onPress={() => onChange(value = true)} />
 
                         )}
                     />
@@ -168,7 +169,7 @@ export function Register() {
                             <Input
                                 title="Quantidade de Leite / mês"
                                 onChangeText={onChange}
-                                value={checklistItem ? checklistItem.amount_of_milk_produced.toString() : value.toString()}
+                                value={value.toString()}
                                 errorMessage={errors.milkAmount?.message}
                             />
                         )}
@@ -180,7 +181,7 @@ export function Register() {
                         defaultValue=''
                         render={({ field: { onChange, value } }) => (
                             <RadioButton title='Tipo' onChange={onChange}
-                                value={checklistItem ? checklistItem.type : value} id='' />
+                                value={value} id='' />
 
                         )}
                     />
@@ -191,7 +192,7 @@ export function Register() {
                         render={({ field: { onChange, value } }) => (
                             <Input title="Quantidade de cabeça de gado"
                                 onChangeText={onChange}
-                                value={checklistItem ? checklistItem.number_of_cows_head.toString() : value.toString()}
+                                value={value.toString()}
                                 errorMessage={errors.cowsHead?.message}
                                 onSubmitEditing={handleSubmit(handleForm)}
                                 returnKeyType='send'
@@ -199,7 +200,7 @@ export function Register() {
                         )}
                     />
 
-                    <Button title="Cadastrar" onPress={checklistItem ? () => handleUpdate(checklistItem) : handleSubmit(handleForm)} isLoading={isLoading} />
+                    <Button title={buttonTitle} onPress={handleSubmit(handleForm)} isLoading={isLoading} />
                 </Form>
             </ScrollView>
         </Container>

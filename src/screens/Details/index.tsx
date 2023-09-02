@@ -45,7 +45,12 @@ export function Details() {
     }
 
     function handleUpdateScreen(checklistItem: ChecklistDTO) {
-        navigation.navigate('register', { checklistItem });
+        navigation.navigate(
+            'register', {
+                checklistItem,
+            buttonTitle: 'Atualizar',
+            title: 'Atualização'
+        });
     }
 
     useFocusEffect(useCallback(() => {
@@ -72,7 +77,7 @@ export function Details() {
                         </Section>
 
                         <TouchableOpacity onPress={() => handleUpdateScreen(checklistItem)}>
-                            <Icon/>
+                            <Icon />
                         </TouchableOpacity>
                     </ContainerData>
                     <Map latitude={checklistItem.location.latitude}

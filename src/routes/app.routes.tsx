@@ -7,7 +7,7 @@ import { ChecklistDTO } from '@dtos/ChecklistDTO';
 type AppRoutes = {
     home: undefined,
     details: { checklistItemId: string },
-    register?: { checklistItem: ChecklistDTO },
+    register?: { checklistItem: ChecklistDTO, title: string, buttonTitle: string },
 }
 
 export type AppNavigatorRoutesProps = NativeStackNavigationProp<AppRoutes>;
