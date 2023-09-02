@@ -28,6 +28,9 @@
       "@dtos/*": [
         "./src/dtos/*"
       ],
+      "@storage/*": [
+        "./src/storage/*"
+      ],
     }
   }
 }

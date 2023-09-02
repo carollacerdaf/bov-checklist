@@ -13,11 +13,15 @@ import { api } from '@service/api';
 import { formatDate } from '@utils/DateFormat';
 import { DetailsDTO } from '@dtos/DetailsDTO';
 import { Loading } from '@components/Loading';
+import { getChecklist } from '@storage/getChecklist';
+import { useApp } from '@hooks/useApp';
 
 export function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [checklistsData, setChecklistsData] = useState<ChecklistDTO[]>([]);
     const [itemSelected, setItemSelected] = useState<ChecklistDTO>({} as ChecklistDTO);
+
+    const { register } = useApp();
 
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -41,6 +45,24 @@ export function Home() {
         } catch (error) {
             Alert.alert('Não foi possível carregar as informações');
             setIsLoading(false);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    async function storageData() {
+        try {
+            const storedItems = await getChecklist();
+            if (storedItems !== null) {
+                setIsLoading(true);
+                storedItems.map((item) => {
+                    register(item)
+                    console.log('item dto', item);
+                })
+            }
+            await fetchCheckLists();
+        } catch (error) {
+            throw error;
         } finally {
             setIsLoading(false);
         }

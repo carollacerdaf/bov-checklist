@@ -3,6 +3,7 @@ import { Alert, ScrollView } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useTheme } from 'styled-components/native';
 
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes'
 
@@ -14,13 +15,11 @@ import { Button } from "@components/Button"
 
 import { Container, Form } from "./styles"
 import { registerSchema } from '@schema/index';
-import { RadioButtonProps, RadioGroup } from 'react-native-radio-buttons-group'
 import { RadioButton } from '@components/RadioButton'
-import BouncyCheckbox from 'react-native-bouncy-checkbox'
-import { useTheme } from 'styled-components'
 import { Checkbox } from '@components/Checkbox'
-import { ChecklistDTO } from '@dtos/ChecklistDTO'
 import { DetailsDTO } from '@dtos/DetailsDTO'
+import { itemCreate } from '@storage/itemCreate'
+import { api } from '@service/api'
 
 type FormDataProps = {
     name: string;
@@ -45,9 +44,10 @@ export function Register() {
     const { register, update } = useApp();
 
     const route = useRoute();
+    const { COLORS } = useTheme();
 
     const { checklistItem, title, buttonTitle } = route.params as RouteParamsProps;
-    
+
     const verifyCheckListItem = Object.keys(checklistItem).length === 0;
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
@@ -80,6 +80,16 @@ export function Register() {
             setIsLoading(false);
         }
 
+    }
+
+    async function handleDelete() {
+        try {
+            await api.delete(`v1/checkList/${checklistItem.id}`).then(() => {
+                navigation.navigate('home');
+            })
+        } catch (error) {
+            Alert.alert('Não foi possível remover o item.')
+        }
     }
 
     async function handleUpdate(data: FormDataProps) {
@@ -205,6 +215,7 @@ export function Register() {
                     />
 
                     <Button title={buttonTitle} onPress={verifyCheckListItem ? handleSubmit(handleForm) : handleSubmit(handleUpdate)} isLoading={isLoading} />
+                    {!verifyCheckListItem ? <Button title='Remover Item' onPress={handleDelete} isLoading={isLoading} style={{ backgroundColor: COLORS.RED }} /> : null}
                 </Form>
             </ScrollView>
         </Container>

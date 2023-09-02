@@ -7,6 +7,7 @@ import { ItemDTO } from "@dtos/ItemDTO";
 import { api } from '@service/api';
 import { ChecklistDTO } from "@dtos/ChecklistDTO";
 import { DetailsDTO } from "@dtos/DetailsDTO";
+import { getChecklist } from "@storage/getChecklist";
 
 export type AppContextDataProps = {
   item: ItemDTO;
@@ -27,6 +28,8 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   async function register(data: ItemDTO) {
     try {
+      console.log('got here');
+      console.log(data);
       const response = await api.post('/v1/checklist', {
         "checklists": [
           {
@@ -46,8 +49,8 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
               "name": data.supervisor
             },
             "location": {
-              "latitude": 0,
-              "longitude": 0
+              "latitude": -23.5,
+              "longitude": -46.6
             },
             "created_at": Date.now().toString(),
             "updated_at": Date.now().toString(),
@@ -55,6 +58,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         ]
       });
       if (response.data) {
+        console.log('DEU RESPONSE', response)
         setItem(data)
       }
     } catch (error) {
@@ -65,28 +69,28 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   async function update(checklistItem: DetailsDTO, data: ItemDTO) {
     try {
       const response = await api.put(`/v1/checkList/${checklistItem.id}`, {
-          "type": data.type,
-          "amount_of_milk_produced": data.milkAmount,
-          "number_of_cows_head": data.cowsHead,
-          "had_supervision": data.hadSupervision,
-          "farmer": {
-            "name": data.farm,
-            "city": data.city,
-          },
-          "from": {
-            "name": data.supervisor
-          },
-          "to": {
-            "name": data.name
-          },
-          "location": {
-            "latitude": checklistItem.location.latitude,
-            "longitude": checklistItem.location.longitude
-          }
+        "type": data.type,
+        "amount_of_milk_produced": data.milkAmount,
+        "number_of_cows_head": data.cowsHead,
+        "had_supervision": data.hadSupervision,
+        "farmer": {
+          "name": data.farm,
+          "city": data.city,
+        },
+        "from": {
+          "name": data.supervisor
+        },
+        "to": {
+          "name": data.name
+        },
+        "location": {
+          "latitude": checklistItem.location.latitude,
+          "longitude": checklistItem.location.longitude
+        }
       });
     } catch (error) {
-      Alert.alert('Ocorreu um erro', 
-      'Não foi possível realizar a atualização. Tente mais tarde.');
+      Alert.alert('Ocorreu um erro',
+        'Não foi possível realizar a atualização. Tente mais tarde.');
     }
   }
 

@@ -12,7 +12,7 @@ export function Map({ latitude, longitude }: Props) {
     return (
         <Container>
             <ListData caption="Localização" />
-            {Platform.OS === 'ios' ?
+            {Platform.OS === 'android' ?
                 <StyledMapView
                     provider={PROVIDER_GOOGLE}
                     initialRegion={{
