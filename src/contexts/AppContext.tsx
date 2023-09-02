@@ -1,18 +1,17 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
-
 import uuid from 'react-native-uuid';
 
+import { ChecklistDTO } from "@dtos/ChecklistDTO";
 import { ItemDTO } from "@dtos/ItemDTO";
 import { api } from '@service/api';
-import { ChecklistDTO } from "@dtos/ChecklistDTO";
 import { DetailsDTO } from "@dtos/DetailsDTO";
 
 export type AppContextDataProps = {
   items: ChecklistDTO[];
   register: (item: ItemDTO) => Promise<void>;
-  update: (item: DetailsDTO, data: ItemDTO) => Promise<void>;
-  checkLists: () => Promise<void>;
+  update: (item: ChecklistDTO, data: ItemDTO) => Promise<void>;
+  updateData: () => void;
 }
 
 type AppContextProviderProps = {
@@ -27,7 +26,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   async function register(data: ItemDTO) {
     try {
-      const response = await api.post('/v1/checklist', {
+      await api.post('/v1/checklist', {
         "checklists": [
           {
             "_id": idNumber,
@@ -59,9 +58,9 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     }
   }
 
-  async function update(checklistItem: DetailsDTO, data: ItemDTO) {
+  async function update(checklistItem: ChecklistDTO, data: ItemDTO) {
     try {
-      const response = await api.put(`/v1/checkList/${checklistItem.id}`, {
+      const response = await api.put(`/v1/checkList/${checklistItem._id}`, {
         "type": data.type,
         "amount_of_milk_produced": data.milkAmount,
         "number_of_cows_head": data.cowsHead,
@@ -87,8 +86,8 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     }
   }
 
-  async function checkLists() {
-    api.get('/v1/checkList').then((response) => {
+  async function updateData() {
+    await api.get('/v1/checkList').then((response) => {
       setItems(response.data);
     }).catch((err) => {
       throw err;
@@ -96,15 +95,11 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   }
 
   useEffect(() => {
-    api.get('/v1/checkList').then((response) => {
-      setItems(response.data);
-    }).catch((err) => {
-      throw err;
-    })
+    updateData();
   }, []);
   return (
     <AppContext.Provider value={
-      { items, register, checkLists, update }}>
+      { items, register, update, updateData }}>
       {children}
     </AppContext.Provider>
   );

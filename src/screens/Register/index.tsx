@@ -1,25 +1,27 @@
-import { useMemo, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Alert, ScrollView } from 'react-native'
-import { useNavigation, useRoute } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
 import { useTheme } from 'styled-components/native';
 
-import { AppNavigatorRoutesProps } from 'src/routes/app.routes'
-
+import { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useApp } from '@hooks/useApp'
+import { api } from '@service/api'
+import { ChecklistDTO } from '@dtos/ChecklistDTO'
+
+import { AppContext } from '@contexts/AppContext'
 
 import { Header } from "@components/Header"
 import { Input } from "@components/Input"
 import { Button } from "@components/Button"
-
-import { Container, Form } from "./styles"
-import { registerSchema } from '@schema/index';
 import { RadioButton } from '@components/RadioButton'
 import { Checkbox } from '@components/Checkbox'
-import { DetailsDTO } from '@dtos/DetailsDTO'
-import { itemCreate } from '@storage/itemCreate'
-import { api } from '@service/api'
+
+import { registerSchema } from '@schema/index';
+
+import { Container, Form } from "./styles"
 
 type FormDataProps = {
     name: string;
@@ -33,7 +35,7 @@ type FormDataProps = {
 }
 
 type RouteParamsProps = {
-    checklistItem: DetailsDTO;
+    checklistItemId: string;
     title: string;
     buttonTitle: string;
 }
@@ -42,23 +44,29 @@ export function Register() {
     const [isLoading, setIsLoading] = useState(false);
 
     const { register, update } = useApp();
+    const { items } = useContext(AppContext)
+
 
     const route = useRoute();
     const { COLORS } = useTheme();
 
-    const { checklistItem, title, buttonTitle } = route.params as RouteParamsProps;
+    const { checklistItemId, title, buttonTitle } = route.params as RouteParamsProps;
 
-    const verifyCheckListItem = Object.keys(checklistItem).length === 0;
+    const checklistItemById: ChecklistDTO = items.find(item =>
+        item._id === checklistItemId) as ChecklistDTO;
+
+    const verifyCheckListItem = checklistItemId === undefined;
+
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
-            name: verifyCheckListItem ? '' : checklistItem.to.name,
-            city: verifyCheckListItem ? '' : checklistItem.farmer.city,
-            cowsHead: verifyCheckListItem ? 0 : checklistItem.number_of_cows_head,
-            farm: verifyCheckListItem ? '' : checklistItem.farmer.name,
-            milkAmount: verifyCheckListItem ? 0 : checklistItem.amount_of_milk_produced,
-            supervisor: verifyCheckListItem ? '' : checklistItem.from.name,
-            type: verifyCheckListItem ? '' : checklistItem.type,
-            hadSupervision: verifyCheckListItem ? false : checklistItem.had_supervision,
+            name: verifyCheckListItem ? '' : checklistItemById.to.name,
+            city: verifyCheckListItem ? '' : checklistItemById.farmer.city,
+            cowsHead: verifyCheckListItem ? 0 : checklistItemById.number_of_cows_head,
+            farm: verifyCheckListItem ? '' : checklistItemById.farmer.name,
+            milkAmount: verifyCheckListItem ? 0 : checklistItemById.amount_of_milk_produced,
+            supervisor: verifyCheckListItem ? '' : checklistItemById.from.name,
+            type: verifyCheckListItem ? '' : checklistItemById.type,
+            hadSupervision: verifyCheckListItem ? false : checklistItemById.had_supervision,
         },
         resolver: yupResolver(registerSchema)
     });
@@ -84,7 +92,7 @@ export function Register() {
 
     async function handleDelete() {
         try {
-            await api.delete(`v1/checkList/${checklistItem.id}`).then(() => {
+            await api.delete(`v1/checkList/${checklistItemId}`).then(() => {
                 navigation.navigate('home');
             })
         } catch (error) {
@@ -95,7 +103,7 @@ export function Register() {
     async function handleUpdate(data: FormDataProps) {
         try {
             setIsLoading(true);
-            await update(checklistItem, data).then(() => {
+            await update(checklistItemById, data).then(() => {
                 navigation.goBack();
             })
         } catch (error) {
@@ -214,8 +222,10 @@ export function Register() {
                         )}
                     />
 
-                    <Button title={buttonTitle} onPress={verifyCheckListItem ? handleSubmit(handleForm) : handleSubmit(handleUpdate)} isLoading={isLoading} />
-                    {!verifyCheckListItem ? <Button title='Remover Item' onPress={handleDelete} isLoading={isLoading} style={{ backgroundColor: COLORS.RED }} /> : null}
+                    <Button title={buttonTitle} onPress={verifyCheckListItem ? handleSubmit(handleForm) :
+                        handleSubmit(handleUpdate)} isLoading={isLoading} />
+                    {!verifyCheckListItem ? <Button title='Remover Item' onPress={handleDelete}
+                        isLoading={isLoading} style={{ backgroundColor: COLORS.RED }} /> : null}
                 </Form>
             </ScrollView>
         </Container>

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { Container, Title } from "./styles";
 import { RadioButtonProps, RadioGroup } from "react-native-radio-buttons-group";
+
+import { Container, Title } from "./styles";
 
 type Props = RadioButtonProps & {
     onChange: () => void;

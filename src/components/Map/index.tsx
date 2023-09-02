@@ -1,7 +1,9 @@
 import { Platform } from "react-native";
-import { ListData } from "@components/ListData";
-import { Container, LocationContainer, StyledMapView, Title } from "./styles";
 import { PROVIDER_GOOGLE } from "react-native-maps";
+
+import { Container, LocationContainer, StyledMapView } from "./styles";
+
+import { ListData } from "@components/ListData";
 
 type Props = {
     latitude: number,

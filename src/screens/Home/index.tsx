@@ -1,28 +1,26 @@
-import { useState, useCallback, useContext } from 'react';
-import { Alert, FlatList } from 'react-native';
+import { useState, useContext, useEffect } from 'react';
+import { FlatList } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { Header } from '@components/Header'
 import { ChecklistCard } from '@components/ChecklistCard';
 import { Button } from '@components/Button';
-import { ChecklistDTO } from '@dtos/ChecklistDTO';
+import { Loading } from '@components/Loading';
+
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
+import { formatDate } from '@utils/DateFormat';
+
+import { AppContext } from '@contexts/AppContext';
 
 import { Container } from './styles'
-import { AppNavigatorRoutesProps } from 'src/routes/app.routes';
-import { api } from '@service/api';
-import { formatDate } from '@utils/DateFormat';
-import { DetailsDTO } from '@dtos/DetailsDTO';
-import { Loading } from '@components/Loading';
 import { getChecklist } from '@storage/getChecklist';
-import { useApp } from '@hooks/useApp';
-import { AppContext } from '@contexts/AppContext';
+import { api } from '@service/api';
 
 export function Home() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const {items} = useContext(AppContext)
+    const { items, updateData } = useContext(AppContext)
 
-    console.log('CONTEXT', items)
 
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -33,8 +31,7 @@ export function Home() {
     function handleRegisterScreen() {
         navigation.navigate('register', {
             title: 'Cadastro',
-            buttonTitle: 'Cadastrar',
-            checklistItem: {} as DetailsDTO
+            buttonTitle: 'Cadastrar'
         });
     }
 
@@ -48,13 +45,17 @@ export function Home() {
                     console.log('item dto', item);
                 })
             }
-            await fetchCheckLists();
         } catch (error) {
             throw error;
         } finally {
             setIsLoading(false);
         }
     }*/
+
+    useFocusEffect(() => {
+        updateData();
+    });
+
     return (
         <Container>
             <Header title='BOVChecklist' />

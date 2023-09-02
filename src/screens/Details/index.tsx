@@ -1,91 +1,77 @@
-import { TouchableOpacity, Alert } from "react-native";
+import { useContext } from "react";
+import { TouchableOpacity } from "react-native";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 
-import { AppNavigatorRoutesProps } from "src/routes/app.routes";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import { ListData } from "@components/ListData";
 import { Header } from "@components/Header";
+import { Map } from '@components/Map'
+
 import { ChecklistDTO } from "@dtos/ChecklistDTO";
+import { formatDate } from "@utils/DateFormat";
+
+import { AppContext } from "@contexts/AppContext";
 
 import { Container, ContainerData, Icon, Section } from "./styles";
-import { api } from "@service/api";
-import { useCallback, useState } from "react";
-import { Loading } from "@components/Loading";
-import { Map } from '@components/Map'
-import { formatDate } from "@utils/DateFormat";
-import { DetailsDTO } from "@dtos/DetailsDTO";
 
 type RouteParamsProps = {
     checklistItemId: string;
 }
 
 export function Details() {
-    const [checklistItem, setchecklistItem] = useState<DetailsDTO>({} as DetailsDTO);
-    const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
     const route = useRoute();
 
+
     const { checklistItemId } = route.params as RouteParamsProps;
+
+    const { items, updateData } = useContext(AppContext)
+
+    const checklistItemById: ChecklistDTO = items.find(item => item._id === checklistItemId) as ChecklistDTO;
 
     function handleBackButton() {
         navigation.goBack();
     }
 
-    async function fetchItemDetails() {
-        try {
-            setIsLoading(true);
-            const response = await api.get(`/v1/checkList/${checklistItemId}`);
-            setchecklistItem(response.data);
-        } catch (error) {
-            Alert.alert('Não foi possível carregar as informações');
-        } finally {
-            setIsLoading(false);
 
-        }
-    }
-
-    function handleUpdateScreen(checklistItem: DetailsDTO) {
+    function handleUpdateScreen() {
         navigation.navigate(
             'register', {
-            checklistItem,
+            checklistItemId,
             buttonTitle: 'Atualizar',
             title: 'Atualização'
         });
     }
 
-    useFocusEffect(useCallback(() => {
-        fetchItemDetails();
-    }, []));
+    useFocusEffect(() => {
+        updateData();
+    });
 
     return (
 
         <Container>
             <Header title="Detalhes" showBackButton onPress={handleBackButton} />
-            {isLoading ? <Loading /> :
-                <>
-                    <ContainerData>
+            <ContainerData>
 
-                        <Section>
-                            <ListData caption="Nome" title={checklistItem.to.name} />
-                            <ListData caption="Fazenda" title={checklistItem.farmer.name} />
-                            <ListData caption="Cidade" title={checklistItem.farmer.city} />
-                            <ListData caption="Data de criação" title={formatDate(checklistItem.created_at)} />
-                            <ListData caption="Tipo" title={checklistItem.type} />
-                            <ListData caption="Quantidade de produtos de leite" title={checklistItem.amount_of_milk_produced.toString()} />
-                            <ListData caption="Cabeça de gado" title={checklistItem.number_of_cows_head.toString()} />
-                            <ListData caption="Supervisão" title={checklistItem.from.name} />
-                        </Section>
+                <Section>
+                    <ListData caption="Nome" title={checklistItemById.to.name} />
+                    <ListData caption="Fazenda" title={checklistItemById.farmer.name} />
+                    <ListData caption="Cidade" title={checklistItemById.farmer.city} />
+                    <ListData caption="Data de criação" title={formatDate(checklistItemById.created_at)} />
+                    <ListData caption="Tipo" title={checklistItemById.type} />
+                    <ListData caption="Quantidade de produtos de leite" title={checklistItemById.amount_of_milk_produced.toString()} />
+                    <ListData caption="Cabeça de gado" title={checklistItemById.number_of_cows_head.toString()} />
+                    <ListData caption="Supervisão" title={checklistItemById.from.name} />
+                </Section>
 
-                        <TouchableOpacity onPress={() => handleUpdateScreen(checklistItem)}>
-                            <Icon />
-                        </TouchableOpacity>
-                    </ContainerData>
-                    <Map latitude={checklistItem.location.latitude}
-                        longitude={checklistItem.location.longitude} />
-                </>
-            }
-
+                <TouchableOpacity onPress={handleUpdateScreen}>
+                    <Icon />
+                </TouchableOpacity>
+            </ContainerData>
+            <Map latitude={checklistItemById.location.latitude}
+                longitude={checklistItemById.location.longitude} />
         </Container>
 
     );
