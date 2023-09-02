@@ -24,11 +24,3 @@ export const Icon = styled(NotePencil).attrs(({ theme }) => ({
 }))`
 margin-top: 14px ;
 `
-export const MapContainer = styled.View`
-padding: 20px;
-`;
-
-export const StyledMapView = styled(MapView)`
-width: 100%;
-height: 100%;
-`;
