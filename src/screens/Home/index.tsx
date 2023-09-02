@@ -11,6 +11,8 @@ import { Container } from './styles'
 import { AppNavigatorRoutesProps } from 'src/routes/app.routes';
 import { api } from '@service/api';
 import { formatDate } from '@utils/DateFormat';
+import { DetailsDTO } from '@dtos/DetailsDTO';
+import { Loading } from '@components/Loading';
 
 export function Home() {
     const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +29,7 @@ export function Home() {
         navigation.navigate('register', {
             title: 'Cadastro',
             buttonTitle: 'Cadastrar',
-            checklistItem: {} as ChecklistDTO
+            checklistItem: {} as DetailsDTO
         });
     }
 
@@ -50,20 +52,22 @@ export function Home() {
     return (
         <Container>
             <Header title='BOVChecklist' />
-            <FlatList
-                data={checklistsData}
-                renderItem={({ item }) => (
-                    <ChecklistCard name={item.from.name}
-                        city={item.farmer.city}
-                        farm={item.farmer.name}
-                        created_date={formatDate(item.created_at)}
-                        onPress={() => handleDetailScreen(item._id)}
-                    />
-                )}
-                keyExtractor={item => item._id}
-                showsVerticalScrollIndicator={false}
-                style={{ padding: 20 }}
-            />
+            {isLoading ? <Loading /> :
+                <FlatList
+                    data={checklistsData}
+                    renderItem={({ item }) => (
+                        <ChecklistCard name={item.to.name}
+                            city={item.farmer.city}
+                            farm={item.farmer.name}
+                            created_date={formatDate(item.created_at)}
+                            onPress={() => handleDetailScreen(item._id)}
+                        />
+                    )}
+                    keyExtractor={item => item._id}
+                    showsVerticalScrollIndicator={false}
+                    style={{ padding: 20 }}
+                />
+            }
             <Button title="Cadastrar" onPress={handleRegisterScreen} />
 
         </Container>

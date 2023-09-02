@@ -13,13 +13,14 @@ import { useCallback, useState } from "react";
 import { Loading } from "@components/Loading";
 import { Map } from '@components/Map'
 import { formatDate } from "@utils/DateFormat";
+import { DetailsDTO } from "@dtos/DetailsDTO";
 
 type RouteParamsProps = {
     checklistItemId: string;
 }
 
 export function Details() {
-    const [checklistItem, setchecklistItem] = useState<ChecklistDTO>({} as ChecklistDTO);
+    const [checklistItem, setchecklistItem] = useState<DetailsDTO>({} as DetailsDTO);
     const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -44,10 +45,10 @@ export function Details() {
         }
     }
 
-    function handleUpdateScreen(checklistItem: ChecklistDTO) {
+    function handleUpdateScreen(checklistItem: DetailsDTO) {
         navigation.navigate(
             'register', {
-                checklistItem,
+            checklistItem,
             buttonTitle: 'Atualizar',
             title: 'Atualização'
         });

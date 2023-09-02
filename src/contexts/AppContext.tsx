@@ -6,11 +6,12 @@ import uuid from 'react-native-uuid';
 import { ItemDTO } from "@dtos/ItemDTO";
 import { api } from '@service/api';
 import { ChecklistDTO } from "@dtos/ChecklistDTO";
+import { DetailsDTO } from "@dtos/DetailsDTO";
 
 export type AppContextDataProps = {
   item: ItemDTO;
   register: (item: ItemDTO) => Promise<void>;
-  update: (item: ChecklistDTO) => Promise<void>;
+  update: (item: DetailsDTO, data: ItemDTO) => Promise<void>;
   checkLists: () => Promise<void>;
 }
 
@@ -61,30 +62,31 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     }
   }
 
-  async function update(data: ChecklistDTO) {
+  async function update(checklistItem: DetailsDTO, data: ItemDTO) {
     try {
-      const response = await api.post(`/v1/checklist/${data._id}`, {
+      const response = await api.put(`/v1/checkList/${checklistItem.id}`, {
           "type": data.type,
-          "amount_of_milk_produced": data.amount_of_milk_produced,
-          "number_of_cows_head": data.number_of_cows_head,
-          "had_supervision": data.had_supervision,
+          "amount_of_milk_produced": data.milkAmount,
+          "number_of_cows_head": data.cowsHead,
+          "had_supervision": data.hadSupervision,
           "farmer": {
-            "name": data.farmer.name,
-            "city": data.farmer.city,
+            "name": data.farm,
+            "city": data.city,
           },
           "from": {
-            "name": data.from.name
+            "name": data.supervisor
           },
           "to": {
-            "name": data.to.name
+            "name": data.name
           },
           "location": {
-            "latitude": data.location.latitude,
-            "longitude": data.location.longitude
+            "latitude": checklistItem.location.latitude,
+            "longitude": checklistItem.location.longitude
           }
       });
     } catch (error) {
-      Alert.alert('Ocorreu um erro', 'Não foi possível realizar a atualização. Tente mais tarde.');
+      Alert.alert('Ocorreu um erro', 
+      'Não foi possível realizar a atualização. Tente mais tarde.');
     }
   }
 

@@ -3,11 +3,12 @@ import { Home } from '@screens/Home';
 import { Details } from '@screens/Details';
 import { Register } from '@screens/Register';
 import { ChecklistDTO } from '@dtos/ChecklistDTO';
+import { DetailsDTO } from '@dtos/DetailsDTO';
 
 type AppRoutes = {
     home: undefined,
     details: { checklistItemId: string },
-    register?: { checklistItem: ChecklistDTO, title: string, buttonTitle: string },
+    register?: { checklistItem: DetailsDTO, title: string, buttonTitle: string },
 }
 
 export type AppNavigatorRoutesProps = NativeStackNavigationProp<AppRoutes>;

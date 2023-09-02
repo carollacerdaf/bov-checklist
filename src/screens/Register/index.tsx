@@ -20,6 +20,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import { useTheme } from 'styled-components'
 import { Checkbox } from '@components/Checkbox'
 import { ChecklistDTO } from '@dtos/ChecklistDTO'
+import { DetailsDTO } from '@dtos/DetailsDTO'
 
 type FormDataProps = {
     name: string;
@@ -33,7 +34,7 @@ type FormDataProps = {
 }
 
 type RouteParamsProps = {
-    checklistItem: ChecklistDTO;
+    checklistItem: DetailsDTO;
     title: string;
     buttonTitle: string;
 }
@@ -46,17 +47,18 @@ export function Register() {
     const route = useRoute();
 
     const { checklistItem, title, buttonTitle } = route.params as RouteParamsProps;
-
+    
+    const verifyCheckListItem = Object.keys(checklistItem).length === 0;
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         defaultValues: {
-            name: '',
-            city: '',
-            cowsHead: 0,
-            farm: '',
-            milkAmount: 0,
-            supervisor: '',
-            type: '',
-            hadSupervision: false,
+            name: verifyCheckListItem ? '' : checklistItem.to.name,
+            city: verifyCheckListItem ? '' : checklistItem.farmer.city,
+            cowsHead: verifyCheckListItem ? 0 : checklistItem.number_of_cows_head,
+            farm: verifyCheckListItem ? '' : checklistItem.farmer.name,
+            milkAmount: verifyCheckListItem ? 0 : checklistItem.amount_of_milk_produced,
+            supervisor: verifyCheckListItem ? '' : checklistItem.from.name,
+            type: verifyCheckListItem ? '' : checklistItem.type,
+            hadSupervision: verifyCheckListItem ? false : checklistItem.had_supervision,
         },
         resolver: yupResolver(registerSchema)
     });
@@ -80,10 +82,10 @@ export function Register() {
 
     }
 
-    async function handleUpdate(checklistItem: ChecklistDTO) {
+    async function handleUpdate(data: FormDataProps) {
         try {
             setIsLoading(true);
-            await update(checklistItem).then(() => {
+            await update(checklistItem, data).then(() => {
                 navigation.goBack();
             })
         } catch (error) {
@@ -168,6 +170,7 @@ export function Register() {
                         render={({ field: { onChange, value } }) => (
                             <Input
                                 title="Quantidade de Leite / mês"
+                                keyboardType='numeric'
                                 onChangeText={onChange}
                                 value={value.toString()}
                                 errorMessage={errors.milkAmount?.message}
@@ -195,12 +198,13 @@ export function Register() {
                                 value={value.toString()}
                                 errorMessage={errors.cowsHead?.message}
                                 onSubmitEditing={handleSubmit(handleForm)}
+                                keyboardType='numeric'
                                 returnKeyType='send'
                             />
                         )}
                     />
 
-                    <Button title={buttonTitle} onPress={handleSubmit(handleForm)} isLoading={isLoading} />
+                    <Button title={buttonTitle} onPress={verifyCheckListItem ? handleSubmit(handleForm) : handleSubmit(handleUpdate)} isLoading={isLoading} />
                 </Form>
             </ScrollView>
         </Container>
