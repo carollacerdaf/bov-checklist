@@ -6,6 +6,8 @@ import { ChecklistDTO } from "@dtos/ChecklistDTO";
 import { ItemDTO } from "@dtos/ItemDTO";
 import { api } from '@service/api';
 import { DetailsDTO } from "@dtos/DetailsDTO";
+import { getChecklist } from "@storage/getChecklist";
+import { itemDelete } from "@storage/itemDelete";
 
 export type AppContextDataProps = {
   items: ChecklistDTO[];
@@ -96,6 +98,12 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   useEffect(() => {
     updateData();
+    getChecklist().then((response)=>{
+      response.map((res)=>{
+        register(res);
+      })
+    });
+    itemDelete();
   }, []);
   return (
     <AppContext.Provider value={

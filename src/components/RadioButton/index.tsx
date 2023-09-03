@@ -1,15 +1,16 @@
 import { useMemo } from "react";
 import { RadioButtonProps, RadioGroup } from "react-native-radio-buttons-group";
 
-import { Container, Title } from "./styles";
+import { Container, ErrorText, Title } from "./styles";
 
 type Props = RadioButtonProps & {
     onChange: () => void;
     value: string;
     title: string;
+    errorMessage?: string;
 }
 
-export function RadioButton({ onChange, value, title }: Props) {
+export function RadioButton({ onChange, value, title, errorMessage }: Props) {
     const radioButtons: RadioButtonProps[] = useMemo(() => ([
         {
             id: 'BPA',
@@ -36,6 +37,7 @@ export function RadioButton({ onChange, value, title }: Props) {
                 selectedId={value}
                 layout="row"
             />
+            <ErrorText>{errorMessage}</ErrorText>
         </Container>
     );
 }

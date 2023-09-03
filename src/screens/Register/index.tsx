@@ -22,6 +22,7 @@ import { Checkbox } from '@components/Checkbox'
 import { registerSchema } from '@schema/index';
 
 import { Container, Form } from "./styles"
+import { itemCreate } from '@storage/itemCreate'
 
 type FormDataProps = {
     name: string;
@@ -80,6 +81,7 @@ export function Register() {
     async function handleForm(data: FormDataProps) {
         try {
             setIsLoading(true);
+            itemCreate(data)
             await register(data).then(() => {
                 navigation.goBack();
             })
@@ -199,9 +201,9 @@ export function Register() {
                     <Controller
                         control={control}
                         name="type"
-                        defaultValue=''
                         render={({ field: { onChange, value } }) => (
                             <RadioButton title='Tipo' onChange={onChange}
+                            errorMessage={errors.type?.message}
                                 value={value} id='' />
 
                         )}

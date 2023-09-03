@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CHECKLIST } from "./storageConfig";
 import { getChecklist } from "./getChecklist";
 import { ItemDTO } from "@dtos/ItemDTO";
-import { ChecklistDTO } from "@dtos/ChecklistDTO";
 
 export async function itemCreate(newItem : ItemDTO) {
     try {

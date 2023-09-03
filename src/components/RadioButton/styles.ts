@@ -16,3 +16,10 @@ export const Title = styled.Text`
         margin-bottom: 2px;
     `};
 `;
+
+export const ErrorText = styled.Text`
+    ${({ theme }) => css`
+        font-family: ${theme.FONT_FAMILY.REGULAR};
+        font-size: ${theme.FONT_SIZE.SM}px;
+        color: ${theme.COLORS.RED};
+`};`;
