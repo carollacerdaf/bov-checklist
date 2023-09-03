@@ -8,7 +8,6 @@ import { useTheme } from 'styled-components/native';
 
 import { AppNavigatorRoutesProps } from '@routes/app.routes'
 import { useApp } from '@hooks/useApp'
-import { api } from '@service/api'
 import { ChecklistDTO } from '@dtos/ChecklistDTO'
 
 import { AppContext } from '@contexts/AppContext'
@@ -44,9 +43,8 @@ type RouteParamsProps = {
 export function Register() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const { register, update } = useApp();
+    const { register, update, deleteChecklistItem } = useApp();
     const { items } = useContext(AppContext)
-
 
     const route = useRoute();
     const { COLORS } = useTheme();
@@ -92,11 +90,17 @@ export function Register() {
 
     }
 
-    async function handleDelete() {
+    function handleDelete() {
         try {
-            await api.delete(`v1/checkList/${checklistItemId}`).then(() => {
-                navigation.navigate('home');
-            })
+            Alert.alert('Remover', 'Deseja remover o grupo?', [
+                { text: 'Não', style: 'cancel' },
+                {
+                    text: 'Sim', onPress: () =>
+                        deleteChecklistItem(checklistItemId).then(() => {
+                            navigation.navigate('home');
+                        })
+                }
+            ])
         } catch (error) {
             Alert.alert('Não foi possível remover o item.')
         }
@@ -109,7 +113,7 @@ export function Register() {
                 navigation.goBack();
             })
         } catch (error) {
-            Alert.alert('Não foi possível realizar o cadastro.Tente novamente.');
+            Alert.alert('Não foi possível atualizar o item.Tente novamente.');
             setIsLoading(false);
         }
     }
@@ -203,7 +207,7 @@ export function Register() {
                         name="type"
                         render={({ field: { onChange, value } }) => (
                             <RadioButton title='Tipo' onChange={onChange}
-                            errorMessage={errors.type?.message}
+                                errorMessage={errors.type?.message}
                                 value={value} id='' />
 
                         )}

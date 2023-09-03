@@ -13,8 +13,6 @@ import { formatDate } from '@utils/DateFormat';
 import { AppContext } from '@contexts/AppContext';
 
 import { Container } from './styles'
-import { getChecklist } from '@storage/getChecklist';
-import { api } from '@service/api';
 
 export function Home() {
     const [isLoading, setIsLoading] = useState(false);
@@ -35,25 +33,10 @@ export function Home() {
         });
     }
 
-    /*async function storageData() {
-        try {
-            const storedItems = await getChecklist();
-            if (storedItems !== null) {
-                setIsLoading(true);
-                storedItems.map((item) => {
-                    register(item)
-                    console.log('item dto', item);
-                })
-            }
-        } catch (error) {
-            throw error;
-        } finally {
-            setIsLoading(false);
-        }
-    }*/
-
     useFocusEffect(() => {
+        setIsLoading(true);
         updateData();
+        setIsLoading(false);
     });
 
     return (

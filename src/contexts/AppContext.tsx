@@ -13,7 +13,8 @@ export type AppContextDataProps = {
   items: ChecklistDTO[];
   register: (item: ItemDTO) => Promise<void>;
   update: (item: ChecklistDTO, data: ItemDTO) => Promise<void>;
-  updateData: () => void;
+  updateData: () => Promise<void>;
+  deleteChecklistItem: (id: string) => Promise<void>;
 }
 
 type AppContextProviderProps = {
@@ -96,10 +97,18 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     })
   }
 
+  async function deleteChecklistItem(id: string) {
+    try {
+      await api.delete(`v1/checkList/${id}`)
+    } catch (error) {
+      throw error;
+    }
+  }
+
   useEffect(() => {
     updateData();
-    getChecklist().then((response)=>{
-      response.map((res)=>{
+    getChecklist().then((response) => {
+      response.map((res) => {
         register(res);
       })
     });
@@ -107,7 +116,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   }, []);
   return (
     <AppContext.Provider value={
-      { items, register, update, updateData }}>
+      { items, register, update, updateData, deleteChecklistItem }}>
       {children}
     </AppContext.Provider>
   );
