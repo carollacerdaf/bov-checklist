@@ -60,7 +60,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   async function update(checklistItem: ChecklistDTO, data: ItemDTO) {
     try {
-      const response = await api.put(`/v1/checkList/${checklistItem._id}`, {
+      await api.put(`/v1/checkList/${checklistItem._id}`, {
         "type": data.type,
         "amount_of_milk_produced": data.milkAmount,
         "number_of_cows_head": data.cowsHead,

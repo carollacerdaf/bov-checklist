@@ -21,8 +21,6 @@ import { Checkbox } from '@components/Checkbox'
 import { registerSchema } from '@schema/index';
 
 import { Container, Form } from "./styles"
-import { api } from '@service/api'
-import getRealm from '@service/realm'
 
 type FormDataProps = {
     name: string;
@@ -118,7 +116,8 @@ export function Register() {
         }
     }
 
-    /*async function saveItem(item: ChecklistDTO) {
+    /*
+    async function saveItem(item: ChecklistDTO) {
         const farmData = {
           _id: new Realm.BSON.ObjectId(),
           type: item.type,
@@ -280,7 +279,7 @@ export function Register() {
                     <Button title={buttonTitle} onPress={verifyCheckListItem ? handleSubmit(handleForm) :
                         handleSubmit(handleUpdate)} isLoading={isLoading} />
                     {!verifyCheckListItem ? <Button title='Remover Item' onPress={handleDelete}
-                        isLoading={isLoading} style={{ backgroundColor: COLORS.RED }} /> : null}
+                        style={{ backgroundColor: COLORS.RED }} /> : null}
                 </Form>
             </ScrollView>
         </Container>
