@@ -21,7 +21,8 @@ import { Checkbox } from '@components/Checkbox'
 import { registerSchema } from '@schema/index';
 
 import { Container, Form } from "./styles"
-import { itemCreate } from '@storage/itemCreate'
+import { api } from '@service/api'
+import getRealm from '@service/realm'
 
 type FormDataProps = {
     name: string;
@@ -79,7 +80,6 @@ export function Register() {
     async function handleForm(data: FormDataProps) {
         try {
             setIsLoading(true);
-            itemCreate(data)
             await register(data).then(() => {
                 navigation.goBack();
             })
@@ -118,6 +118,55 @@ export function Register() {
         }
     }
 
+    /*async function saveItem(item: ChecklistDTO) {
+        const farmData = {
+          _id: new Realm.BSON.ObjectId(),
+          type: item.type,
+          amount_of_milk_produced: item.amount_of_milk_produced,
+          number_of_cows_head: item.number_of_cows_head,
+          had_supervision: item.had_supervision,
+          farmer: {
+            name: item.farmer.name,
+            city: item.farmer.city,
+          },
+          from: {
+            name: item.from.name,
+          },
+          to: {
+            name: item.to.name,
+          },
+          location: {
+            latitude: item.location.latitude,
+            longitude: item.location.longitude,
+          },
+          created_at: new Date().toString(),
+          updated_at: new Date().toString(),
+        };
+        const realm = await getRealm();
+      
+        realm.write(()=>{
+            realm.create('FarmData', farmData);
+        })
+      }
+
+      async function handleAddRepository(){
+        try {
+          const response = await api.get('v1/checkList');
+      
+          response.data.map((item: ChecklistDTO)=>{
+            saveItem(item);
+          })
+        } catch (error) {
+            throw error;
+        }
+      }
+
+      async function getData() {
+        const realm = await getRealm();
+      
+        const data = realm.objects('FarmData');
+        return data;
+      }*/
 
     return (
         <Container>
