@@ -64,11 +64,13 @@ export function Details() {
                         <ListData caption="Nome" title={checklistItemById.to.name} />
                         <ListData caption="Fazenda" title={checklistItemById.farmer.name} />
                         <ListData caption="Cidade" title={checklistItemById.farmer.city} />
-                        <ListData caption="Data de criação" title={formatDate(checklistItemById.created_at)} />
                         <ListData caption="Tipo" title={checklistItemById.type} />
                         <ListData caption="Quantidade de produtos de leite" title={checklistItemById.amount_of_milk_produced.toString()} />
                         <ListData caption="Cabeça de gado" title={checklistItemById.number_of_cows_head.toString()} />
                         <ListData caption="Supervisão" title={checklistItemById.from.name} />
+                        <ListData caption="Houve supervisão" title={checklistItemById.had_supervision ? 'Sim' : 'Não'} />
+                        <ListData caption="Data de criação" title={formatDate(checklistItemById.created_at)} />
+                        <ListData caption="Data de atualização" title={formatDate(checklistItemById.updated_at)} />
                     </Section>
 
                 <TouchableOpacity onPress={handleUpdateScreen}>
